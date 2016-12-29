@@ -1,20 +1,69 @@
-$Location = "WestEurope"
+########################
+# Template Files
+########################
+function CreateConsortiumMember ($resourceGroupName, $location, $templateFile, $paramsFile, $consortiumName, $bootNodeIp = "0.0.0.0") {
 
-$BootNodeResourceGroupName = "BCDev_BootNode"
-$BootNodeTemplateFile = ".\template.consortium.json"
-$BootNodeTemplateParamsFile = ".\template.consortium.params.json"
+    New-AzureRmResourceGroup -Name $resourceGroupName -Location $location
 
-$FounderResourceGroupName = "BCDev_Founder"
-$MemberTemplateFile = ".\template.consortiumMember.json"
-$MemberTemplateParamsFile = ".\template.consortiumMember.params.json"
+    if ($bootNodeIp -eq "0.0.0.0") {
+        Write-Host "Creating boot node"
+        Write-Host "New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFile -TemplateParameterFile $paramsFile -consortiumName $consortiumName"
 
-$Member1ResourceGroupName = "BCDev_Member1"
+        New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName `
+        -TemplateFile $templateFile `
+        -TemplateParameterFile $paramsFile `
+        -consortiumName $consortiumName   
+    }
+    else {
+        Write-Host "Creating member node $consortiumName..."
 
-#New-AzureRmResourceGroup -Name $BootNodeResourceGroupName -Location $Location
-#New-AzureRmResourceGroupDeployment -ResourceGroupName $BootNodeResourceGroupName -TemplateFile $BootNodeTemplateFile -TemplateParameterFile $BootNodeTemplateParamsFile
+        New-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName `
+        -TemplateFile $templateFile `
+        -TemplateParameterFile $paramsFile `
+        -consortiumName $consortiumName `
+        -dashboardIp $bootNodeIp `
+        -registrarIp $bootNodeIp 
+    }
+}
 
-New-AzureRmResourceGroup -Name $FounderResourceGroupName -Location $Location
-New-AzureRmResourceGroupDeployment -ResourceGroupName $FounderResourceGroupName -TemplateFile $MemberTemplateFile -TemplateParameterFile $MemberTemplateParamsFile
+########################
+# Members 
+########################
+$location = "WestEurope"
 
-New-AzureRmResourceGroup -Name $Member1ResourceGroupName -Location $Location
-New-AzureRmResourceGroupDeployment -ResourceGroupName $Member1ResourceGroupName -TemplateFile $MemberTemplateFile -TemplateParameterFile $MemberTemplateParamsFile
+$resourceGroupPrefix = "BCDev1_"
+$bootNodeResourceGroupName = $resourceGroupPrefix + "BootNode"
+$bootNodeConsortiumName = "bootnode"
+$member1ResourceGroupName = $resourceGroupPrefix + "Founder"
+$member1ConsortiumName = "founder"
+$member2ResourceGroupName = $resourceGroupPrefix + "Member2"
+$member2ConsortiumName = "member2"
+
+########################
+# Template Files
+########################
+$bootNodeTemplateFile = ".\template.consortium.json"
+$memberTemplateFile = ".\template.consortiumMember.json"
+
+########################
+# Param Files
+########################
+$bootNodeTemplateParamsFile = ".\template.consortium.params.json"
+$memberTemplateParamsFile = ".\template.consortiumMember.params.json"
+
+########################
+# Bootnode
+########################
+$bootNodeDeployment = CreateConsortiumMember $bootNodeResourceGroupName $location $bootNodeTemplateFile $bootNodeTemplateParamsFile $bootNodeConsortiumName
+$dashboardIp = $bootNodeDeployment.Outputs.dashboardIp.value
+
+########################
+# Founder Node
+########################
+CreateConsortiumMember $member1ResourceGroupName $location $memberTemplateFile $memberTemplateParamsFile $member1ConsortiumName $dashboardIp   
+
+########################
+# Member2 Node
+########################
+CreateConsortiumMember $member2ResourceGroupName $location $memberTemplateFile $memberTemplateParamsFile $member2ConsortiumName $dashboardIp   
+
