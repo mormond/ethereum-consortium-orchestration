@@ -1,24 +1,33 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
-    "memberappserverplanName": {
-      "value": "MyMember"
+    "memberappserviceplanName": {
+      "value": "memberAppServicePlanName"
     },
-    "memberappserverplanSKU": {
+    "memberappserviceplanSKU": {
       "value": "Free"
     },
     "memberappserverplanWorkerSize": {
       "value": "0"
     },
     "membersqldbName": {
-      "value": "MyMemberDB"
+      "value": "memberSqlDBName"
     },
     "membersqlserverAdminLogin": {
       "value": "GEN-USER"
     },
     "membersqlserverAdminLoginPassword": {
       "value": "GEN-PASSWORD"
+    },
+    "membersqldbimportStorageKeyType": {
+      "value": "memberStorageKeyType"
+    },
+    "membersqldbimportStorageKey": {
+      "value": "memberStorageKey"
+    },
+    "membersqldbimportStorageUri": {
+      "value": "memberStorageUri"
     }
   }
 }
