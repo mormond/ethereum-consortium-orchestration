@@ -1,0 +1,223 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "membersqlserverAdminLogin": {
+      "type": "string",
+      "minLength": 1
+    },
+    "membersqlserverAdminLoginPassword": {
+      "type": "securestring"
+    },
+    "membersqldbName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "membersqldbCollation": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+    },
+    "membersqldbEdition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "membersqldbRequestedServiceObjectiveName": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "metadata": {
+        "description": "Describes the performance level for Edition"
+      }
+    },
+    "memberappserverplanName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "memberappserverplanSKU": {
+      "type": "string",
+      "allowedValues": [
+        "Free",
+        "Shared",
+        "Basic",
+        "Standard"
+      ],
+      "defaultValue": "Free"
+    },
+    "memberappserverplanWorkerSize": {
+      "type": "string",
+      "allowedValues": [
+        "0",
+        "1",
+        "2"
+      ],
+      "defaultValue": "0"
+    }
+
+  },
+  "variables": {
+    "membersqlserverName": "[concat('membersqlserver', uniqueString(resourceGroup().id))]",
+    "memberwebappName": "[concat('memberwebapp', uniqueString(resourceGroup().id))]",
+    "memberwebapiName": "[concat('memberwebapi', uniqueString(resourceGroup().id))]"
+
+  },
+  "resources": [
+    {
+      "name": "[variables('membersqlserverName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01-preview",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "membersqlserver"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('membersqlserverAdminLogin')]",
+        "administratorLoginPassword": "[parameters('membersqlserverAdminLoginPassword')]"
+      },
+      "resources": [
+        {
+          "name": "AllowAllWindowsAzureIps",
+          "type": "firewallrules",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('membersqlserverName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "name": "[parameters('membersqldbName')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('membersqlserverName'))]"
+          ],
+          "tags": {
+            "displayName": "membersqldb"
+          },
+          "properties": {
+            "collation": "[parameters('membersqldbCollation')]",
+            "edition": "[parameters('membersqldbEdition')]",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[parameters('membersqldbRequestedServiceObjectiveName')]"
+          }
+        }
+      ]
+    },
+    {
+      "name": "[parameters('memberappserverplanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-06-01",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "memberappserverplan"
+      },
+      "properties": {
+        "name": "[parameters('memberappserverplanName')]",
+        "sku": "[parameters('memberappserverplanSKU')]",
+        "workerSize": "[parameters('memberappserverplanWorkerSize')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "name": "[variables('memberwebappName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', variables('membersqlserverName'), parameters('membersqldbName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName')))]": "Resource",
+        "displayName": "memberwebapp"
+      },
+      "properties": {
+        "name": "[variables('memberwebappName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName'))]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2016-03-01",
+          "type": "config",
+          "name": "connectionstrings",
+          "dependsOn": [
+            "[variables('memberwebappName')]"
+          ],
+          "properties": {
+            "DefaultConnection": {
+              "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('membersqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('membersqldbName'), ';User Id=', parameters('membersqlserverAdminLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('membersqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('membersqlserverAdminLoginPassword'), ';')]",
+              "type": "SQLAzure"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "[variables('memberwebapiName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName')))]": "Resource",
+        "displayName": "memberwebapi"
+      },
+      "properties": {
+        "name": "[variables('memberwebapiName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName'))]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2016-03-01",
+          "type": "config",
+          "name": "connectionstrings",
+          "dependsOn": [
+            "[variables('memberwebapiName')]"
+          ],
+          "properties": {
+            "DefaultConnection": {
+              "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('membersqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('membersqldbName'), ';User Id=', parameters('membersqlserverAdminLogin'), '@', reference(concat('Microsoft.Sql/servers/', variables('membersqlserverName'))).fullyQualifiedDomainName, ';Password=', parameters('membersqlserverAdminLoginPassword'), ';')]",
+              "type": "SQLAzure"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {
+    "memberwebappEndpoint": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Web/sites/', variables('memberwebappName'))).hostnames[0]]"
+    },
+    "memberwebapiEndpoint": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Web/sites/', variables('memberwebapiName'))).hostnames[0]]"
+    },
+    "membersqlFQDN": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Sql/servers/', variables('membersqlserverName'))).fullyQualifiedDomainName]"
+    }
+  }
+}
