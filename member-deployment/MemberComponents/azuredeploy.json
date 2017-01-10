@@ -43,11 +43,11 @@
         "description": "Describes the performance level for Edition"
       }
     },
-    "memberappserverplanName": {
+    "memberappserviceplanName": {
       "type": "string",
       "minLength": 1
     },
-    "memberappserverplanSKU": {
+    "memberappserviceplanSKU": {
       "type": "string",
       "allowedValues": [
         "Free",
@@ -155,7 +155,7 @@
       ]
     },
     {
-      "name": "[parameters('memberappserverplanName')]",
+      "name": "[parameters('memberappserviceplanName')]",
       "type": "Microsoft.Web/serverfarms",
       "location": "[resourceGroup().location]",
       "apiVersion": "2014-06-01",
@@ -164,8 +164,8 @@
         "displayName": "memberappserverplan"
       },
       "properties": {
-        "name": "[parameters('memberappserverplanName')]",
-        "sku": "[parameters('memberappserverplanSKU')]",
+        "name": "[parameters('memberappserviceplanName')]",
+        "sku": "[parameters('memberappserviceplanSKU')]",
         "workerSize": "[parameters('memberappserverplanWorkerSize')]",
         "numberOfWorkers": 1
       }
@@ -176,16 +176,16 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-08-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserviceplanName'))]",
         "[variables('membersqlimportId')]"
       ],
       "tags": {
-        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName')))]": "Resource",
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('memberappserviceplanName')))]": "Resource",
         "displayName": "memberwebapp"
       },
       "properties": {
         "name": "[variables('memberwebappName')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName'))]"
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserviceplanName'))]"
       },
       "resources": [
         {
@@ -210,16 +210,16 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-08-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserviceplanName'))]",
         "[variables('membersqlimportId')]"
       ],
       "tags": {
-        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName')))]": "Resource",
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('memberappserviceplanName')))]": "Resource",
         "displayName": "memberwebapi"
       },
       "properties": {
         "name": "[variables('memberwebapiName')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserverplanName'))]"
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('memberappserviceplanName'))]"
       },
       "resources": [
         {
