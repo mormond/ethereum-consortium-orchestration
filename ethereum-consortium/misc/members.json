@@ -1,20 +1,6 @@
 [
     {
-        "name":"Bootnode",
-        "minerCount" : 0,
-        "txNodeCount" : 1,
-        "minerAddress" : "0x0000000000000000000000000000000000000000",
-        "location" : "westeurope"
-    },
-    {
-        "name":"M1",
-        "minerCount" : 3,
-        "txNodeCount" : 1,
-        "minerAddress" : "0x0000000000000000000000000000000000000000",
-        "location" : "westeurope"
-    },
-    {
-        "name":"M2",
+        "name":"Founder",
         "minerCount" : 3,
         "txNodeCount" : 1,
         "minerAddress" : "0x0000000000000000000000000000000000000000",
