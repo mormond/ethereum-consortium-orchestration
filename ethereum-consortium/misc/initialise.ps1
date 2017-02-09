@@ -1,7 +1,5 @@
 login-azurermaccount 
 
-Select-AzureRmSubscription -Subscription Name "FounderAscendPlus"
-
 $RgConsortiumName = "Latest2"
 New-AzureRmResourceGroup -Location "westeurope" -Name $RgConsortiumName
 New-AzureRmResourceGroupDeployment -TemplateFile .\template.consortium.json -TemplateParameterFile .\misc\template.consortium.params.json -ResourceGroupName $RgConsortiumName
