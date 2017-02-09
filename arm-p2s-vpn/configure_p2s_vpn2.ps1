@@ -117,41 +117,7 @@ function AddExistingVnet($subscriptionId, $resourceGroupName, $webAppName)
         $vnetGatewayAddressSpace="10.5.0.0/16"
         $vnetPointToSiteAddressSpace="172.16.0.0/16"
 
-        $changeRequested = 0
-
-        Write-Host "Your VNET is in the address space $($vnet.AddressSpace.AddressPrefixes), with the following Subnets:"
-        foreach($subnet in $vnet.Subnets)
-        {
-            Write-Host "$($subnet.Name): $($subnet.AddressPrefix)"
-        }
-
-        $vnetGatewayAddressSpace = Read-Host "Please choose a GatewaySubnet address space"
-
-        while($changeRequested -eq 0)
-        {
-            Write-Host
-            Write-Host "Currently, I will create a VNET gateway with the following settings:"
-            Write-Host
-            Write-Host "Virtual Network Name: $vnetName"
-            Write-Host "Resource Group Name:  $($vnet.ResourceGroupName)"
-            Write-Host "Gateway Name: $vnetGatewayName"
-            Write-Host "Vnet IP name: $vnetIpName"
-            Write-Host "Vnet IP config name:  $vnetIpConfigName"
-            Write-Host "Address Space:$($vnet.AddressSpace.AddressPrefixes)"
-            Write-Host "Gateway Address Space:$vnetGatewayAddressSpace"
-            Write-Host "Point-To-Site Address Space:  $vnetPointToSiteAddressSpace"
-            Write-Host
-            $changeRequested = PromptYesNo "" "Do you wish to change these settings?" 1
-
-            if($changeRequested -eq 0)
-            {
-                $vnetGatewayName = ReadHostWithDefault "Vnet Gateway Name" $vnetGatewayName
-                $vnetIpName = ReadHostWithDefault "Vnet IP name" $vnetIpName
-                $vnetIpConfigName = ReadHostWithDefault "Vnet IP configuration name" $vnetIpConfigName
-                $vnetGatewayAddressSpace = ReadHostWithDefault "Vnet Gateway Address Space" $vnetGatewayAddressSpace
-                $vnetPointToSiteAddressSpace = ReadHostWithDefault "Vnet Point-to-site Address Space" $vnetPointToSiteAddressSpace
-            }
-        }
+        $vnetGatewayAddressSpace = "10.0.2.0/24"
 
         $ErrorActionPreference = "Stop";
 
