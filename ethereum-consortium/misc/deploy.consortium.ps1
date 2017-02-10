@@ -1,6 +1,8 @@
+#Run from the etherem-consortium folder
+
 login-azurermaccount 
 
-$RgConsortiumName = "BC_Founder"
+$rgConsortiumName = "BC_Founder"
 $location = "westeurope"
 
 New-AzureRmResourceGroup -Location $location -Name $rgConsortiumName
@@ -18,11 +20,13 @@ New-AzureRmResourceGroupDeployment -TemplateFile .\template.consortium.json `
 # Run the InstallTruffle2.ps1 script
 #
 
-$pwd = Read-Host "Enter admin password"
+$adminUsername = "azureuser"
+$password = Read-Host "Enter admin password"
+$dnsLabelPrefix = "bcfounder1"
 
 New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/dxuk/EthereumBlockchainDemo/master/DevVM/azuredeploy.json" `
  -ResourceGroupName $RgConsortiumName
- -adminUsername "azureuser"
- -adminPassword $pwd
- -dnsLabelPrefix "bcfounder"
+ -adminUsername $adminUsername
+ -adminPassword $password
+ -dnsLabelPrefix $dnsLabelPrefix
 
