@@ -77,7 +77,20 @@
                             "priority": 100,
                             "direction": "Inbound"
                         }
-                    }
+                    },
+                    {
+                        "name": "allow-json-rpc",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "8545",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "10.0.1.0/24",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Outbound"
+                        }
+                    }                    
                 ]
             }
         },
