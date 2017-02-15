@@ -1,15 +1,19 @@
 #Run from the etherem-consortium folder
 
-login-azurermaccount 
-
 $rgConsortiumName = "BC_Founder"
 $location = "westeurope"
 
+$devVmAdminUsername = "azureuser"
+$devVmPassword = Read-Host "Enter admin password"
+$devVmDnsLabelPrefix = "bcfounder"
+
+login-azurermaccount 
+
 New-AzureRmResourceGroup -Location $location -Name $rgConsortiumName
 
-New-AzureRmResourceGroupDeployment -TemplateFile .\template.consortium.json `
- -TemplateParameterFile .\misc\template.consortium.params.json `
- -ResourceGroupName $rgConsortiumName
+New-AzureRmResourceGroupDeployment -TemplateFile ..\ethereum-consortium\template.consortium.json `
+ -TemplateParameterFile .\ethereum-consortium\template.consortium.params.json `
+ -ResourceGroupName $rgName
 
 #
 # Add a DevBox VM
@@ -20,13 +24,9 @@ New-AzureRmResourceGroupDeployment -TemplateFile .\template.consortium.json `
 # Run the InstallTruffle2.ps1 script
 #
 
-$adminUsername = "azureuser"
-$password = Read-Host "Enter admin password"
-$dnsLabelPrefix = "bcfounder1"
-
 New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/dxuk/EthereumBlockchainDemo/master/DevVM/azuredeploy.json" `
- -ResourceGroupName $RgConsortiumName
- -adminUsername $adminUsername
- -adminPassword $password
- -dnsLabelPrefix $dnsLabelPrefix
+ -ResourceGroupName $rgName
+ -adminUsername $devVmAdminUsername
+ -adminPassword $devVmPassword
+ -dnsLabelPrefix $devVmDnsLabelPrefix
 
