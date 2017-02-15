@@ -5,6 +5,9 @@
         "hostingPlanName": {
             "value": "abc"
         },
+        "skuName" : {
+            "value": "S1"
+        },
         "administratorLogin": {
             "value": "mike"
         },
