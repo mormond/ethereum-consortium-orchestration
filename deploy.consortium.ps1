@@ -15,7 +15,7 @@ $databaseName = "accounts"
 
 login-azurermaccount 
 
-New-AzureRmResourceGroup -Location $location -Name $rgConsortiumName
+New-AzureRmResourceGroup -Location $location -Name $rgName
 
 New-AzureRmResourceGroupDeployment -TemplateFile "..\ethereum-consortium\template.consortium.json" `
  -TemplateParameterFile ".\ethereum-consortium\template.consortium.params.json" `
