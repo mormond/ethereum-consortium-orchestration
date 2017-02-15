@@ -1,6 +1,7 @@
 #Run from the etherem-consortium folder
 
 $rgConsortiumName = "BC_Founder"
+$rgName = "BC_Founder"
 $location = "westeurope"
 
 $devVmAdminUsername = "azureuser"
@@ -40,7 +41,7 @@ New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.c
  #
  #
 
- New-AzureRmResourceGroupDeployment -TemplateFile ".\member-deployment\node-interface-components\" `
+ New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\template.web.components.json" `
  -ResourceGroupName $rgName `
  -hostingPlanName $hostingPlanName `
  -skuName $skuName `
@@ -54,4 +55,4 @@ New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.c
 
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
-& ($invocationPath + ".\member-deployment\node-interface-components\app.service.vnet.integration.ps1") 
+& ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") 
