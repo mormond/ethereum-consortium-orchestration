@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "hostingPlanName": {
-            "value": null
+            "value": "abc"
         },
         "administratorLogin": {
-            "value": null
+            "value": "mike"
         },
         "databaseName": {
-            "value": null
+            "value": "accounts"
         }
     }
 }
