@@ -7,12 +7,17 @@ $devVmAdminUsername = "azureuser"
 $devVmPassword = Read-Host "Enter admin password"
 $devVmDnsLabelPrefix = "bcfounder"
 
+$hostingPlanName = "AppServicesHostingPlan"
+$skuName = "S1"
+$administratorLogin = "dbadmin"
+$databaseName = "accounts"
+
 login-azurermaccount 
 
 New-AzureRmResourceGroup -Location $location -Name $rgConsortiumName
 
-New-AzureRmResourceGroupDeployment -TemplateFile ..\ethereum-consortium\template.consortium.json `
- -TemplateParameterFile .\ethereum-consortium\template.consortium.params.json `
+New-AzureRmResourceGroupDeployment -TemplateFile "..\ethereum-consortium\template.consortium.json" `
+ -TemplateParameterFile ".\ethereum-consortium\template.consortium.params.json" `
  -ResourceGroupName $rgName
 
 #
@@ -25,8 +30,28 @@ New-AzureRmResourceGroupDeployment -TemplateFile ..\ethereum-consortium\template
 #
 
 New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/dxuk/EthereumBlockchainDemo/master/DevVM/azuredeploy.json" `
- -ResourceGroupName $rgName
- -adminUsername $devVmAdminUsername
- -adminPassword $devVmPassword
+ -ResourceGroupName $rgName `
+ -adminUsername $devVmAdminUsername `
+ -adminPassword $devVmPassword `
  -dnsLabelPrefix $devVmDnsLabelPrefix
 
+ #
+ # Add the App Service components (web site + SQL Server)
+ #
+ #
+
+ New-AzureRmResourceGroupDeployment -TemplateFile ".\member-deployment\node-interface-components\" `
+ -ResourceGroupName $rgName `
+ -hostingPlanName $hostingPlanName `
+ -skuName $skuName `
+ -administratorLogin $administratorLogin `
+ -databaseName $databaseName 
+
+#
+# Add the VNET Integration
+#
+#
+
+$invocationPath = Split-Path $MyInvocation.MyCommand.Path
+
+& ($invocationPath + ".\member-deployment\node-interface-components\app.service.vnet.integration.ps1") 
