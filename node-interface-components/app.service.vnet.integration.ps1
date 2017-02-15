@@ -225,8 +225,8 @@ function RemoveVnet($subscriptionId, $resourceGroupName, $webAppName)
     }
 }
 
-$resourceGroup = "BC_Founder"
-$appName = "bcgateway"
+$resourceGroup = "BC_Founder123"
+$appName = Read-Host "Enter the Web API Name"
 $Context = Get-AzureRmContext
 $Subscription = $Context.Subscription
 $subscriptionId = $Subscription.SubscriptionId
