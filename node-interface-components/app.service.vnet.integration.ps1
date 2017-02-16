@@ -1,3 +1,13 @@
+# Parameter help description
+param(
+[parameter(Mandatory = $true)]
+[String]
+$rgName,
+[parameter(Mandatory = $true)]
+[String]
+$appName
+)
+
 function ReadHostWithDefault($message, $default)
 {
     $result = Read-Host "$message [$default]"
@@ -225,11 +235,11 @@ function RemoveVnet($subscriptionId, $resourceGroupName, $webAppName)
     }
 }
 
-$resourceGroup = "BC_Founder123"
-$appName = Read-Host "Enter the Web API Name"
+#$rgName = "BC_Founder123"
+#$appName = Read-Host "Enter the Web API Name"
 $Context = Get-AzureRmContext
 $Subscription = $Context.Subscription
 $subscriptionId = $Subscription.SubscriptionId
 
-AddExistingVnet $subscriptionId $resourceGroup $appName
+AddExistingVnet $subscriptionId $rgName $appName
 
