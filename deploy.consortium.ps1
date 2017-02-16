@@ -58,7 +58,7 @@ New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.c
  #
 
 Write-Host "Deploying web site / API components."
-New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\template.web.components.json" `
+$webOutputs = New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\template.web.components.json" `
   -ResourceGroupName $rgName `
   -hostingPlanName $hostingPlanName `
   -skuName $skuName `
@@ -72,6 +72,9 @@ New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\te
 #
 
 Write-Host "Adding VNET integration."
+Write-Host "Web app name: $webOutputs.WebApiName"
+Write-Host "Resource Group: $rgName"
+$argList = @($webOutputs.WebApiName, $rgName)
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
-& ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") 
+& ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") $argList
