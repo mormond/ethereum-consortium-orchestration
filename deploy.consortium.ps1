@@ -14,8 +14,17 @@ $skuName = "S1"
 $administratorLogin = "dbadmin"
 $databaseName = "accounts"
 
+function CheckAndAuthenticateIfRequired {
+    Try {
+        $a = Get-AzureRmContext
+    }
+    Catch {
+        login-azurermaccount 
+    }
+}
+
 Write-Host "Logging into Azure"
-login-azurermaccount 
+CheckAndAuthenticateIfRequired
 
 Write-Host "Setting subscription to: $subName"
 Select-AzureRmSubscription -SubscriptionName $subName
