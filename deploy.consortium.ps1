@@ -3,6 +3,7 @@
 $rgConsortiumName = "BC_Founder"
 $rgName = "BC_Founder"
 $location = "westeurope"
+$subName = "FounderAscendPlus"
 
 $devVmAdminUsername = "azureuser"
 $devVmPassword = Read-Host "Enter admin password"
@@ -13,10 +14,16 @@ $skuName = "S1"
 $administratorLogin = "dbadmin"
 $databaseName = "accounts"
 
+Write-Host "Logging into Azure"
 login-azurermaccount 
 
+Write-Host "Setting subscription to: $subName"
+Select-AzureRmSubscription -SubscriptionName $subName
+
+Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgName
 
+Write-host "Deploying consortium template. Wish me luck."
 New-AzureRmResourceGroupDeployment -TemplateFile "..\ethereum-consortium\template.consortium.json" `
  -TemplateParameterFile ".\ethereum-consortium\template.consortium.params.json" `
  -ResourceGroupName $rgName
@@ -30,6 +37,7 @@ New-AzureRmResourceGroupDeployment -TemplateFile "..\ethereum-consortium\templat
 # Run the InstallTruffle2.ps1 script
 #
 
+Write-Host "Deploying Dev VM."
 New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/dxuk/EthereumBlockchainDemo/master/DevVM/azuredeploy.json" `
  -ResourceGroupName $rgName `
  -adminUsername $devVmAdminUsername `
@@ -41,18 +49,20 @@ New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.c
  #
  #
 
- New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\template.web.components.json" `
- -ResourceGroupName $rgName `
- -hostingPlanName $hostingPlanName `
- -skuName $skuName `
- -administratorLogin $administratorLogin `
- -databaseName $databaseName 
+Write-Host "Deploying web site / API components."
+New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\template.web.components.json" `
+  -ResourceGroupName $rgName `
+  -hostingPlanName $hostingPlanName `
+  -skuName $skuName `
+  -administratorLogin $administratorLogin `
+  -databaseName $databaseName 
 
 #
 # Add the VNET Integration
 #
 #
 
+Write-Host "Adding VNET integration."
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
 & ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") 
