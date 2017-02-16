@@ -1,17 +1,16 @@
 #Run from the etherem-consortium folder
 
 $rgConsortiumName = "BC_Founder"
-$rgName = "BC_Founder"
+$rgName = "BC_Test_Consortium_Delete"
 $location = "westeurope"
-$subName = "FounderAscendPlus"
 
 $devVmAdminUsername = "azureuser"
-$devVmPassword = Read-Host "Enter admin password"
 $devVmDnsLabelPrefix = "bcfounder"
-
+$devVmPassword = Read-Host "Enter dev vm admin password" -AsSecureString
 $hostingPlanName = "AppServicesHostingPlan"
 $skuName = "S1"
-$administratorLogin = "dbadmin"
+$sqlAdminLogin = "dbadmin"
+$sqlAdminPassword = Read-Host "Enter sql admin password" -AsSecureString
 $databaseName = "accounts"
 
 function CheckAndAuthenticateIfRequired {
@@ -63,7 +62,8 @@ New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\te
   -ResourceGroupName $rgName `
   -hostingPlanName $hostingPlanName `
   -skuName $skuName `
-  -administratorLogin $administratorLogin `
+  -administratorLogin $sqlAdminLogin `
+  -administratorLoginPassword $sqlAdminPassword `
   -databaseName $databaseName 
 
 #
