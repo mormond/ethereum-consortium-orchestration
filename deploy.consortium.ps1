@@ -88,5 +88,5 @@ Write-Host "Adding VNET integration."
 
 & ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
     -rgName $rgMemberName `
-    -targetVnetName = $vnetName,
+    -targetVnetName $vnetName,
     -appName $webOutputs.Outputs.webApiName.Value
