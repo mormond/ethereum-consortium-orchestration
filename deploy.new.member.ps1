@@ -18,6 +18,8 @@ Param(
     [string]$skuName = "S1"
 )
 
+$invocationPath = Split-Path $MyInvocation.MyCommand.Path
+
 function CheckAndAuthenticateIfRequired {
     Try {
         $a = Get-AzureRmContext
@@ -36,8 +38,8 @@ Select-AzureRmSubscription -SubscriptionName $subName
 Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgName
 
-New-AzureRmResourceGroup -Location "westeurope" -Name $rgMemberName
-New-AzureRmResourceGroupDeployment -TemplateFile .\template.consortiumMember.json `
+Write-host "Deploying member template. Wish me luck."
+New-AzureRmResourceGroupDeployment -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortiumMember.json") `
  -TemplateParameterFile .\misc\template.consortium.params.participant1.json `
  -ResourceGroupName $rgMemberName `
  -consortiumMemberName $memberName `
@@ -50,22 +52,21 @@ New-AzureRmResourceGroupDeployment -TemplateFile .\template.consortiumMember.jso
 #
 
 Write-Host "Deploying web site / API components."
-$webOutputs = New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\template.web.components.json" `
-  -ResourceGroupName $rgName `
-  -hostingPlanName $hostingPlanName `
-  -skuName $skuName `
-  -administratorLogin $sqlAdminLogin `
-  -administratorLoginPassword $sqlAdminPassword `
-  -databaseName $databaseName 
 
+$webOutputs = & ($invocationPath + "\node-interface-components\add.app.service.components.ps1") `
+    -rgName $rgMemberName `
+    -sqlAdminLogin $sqlAdminLogin `
+    -sqlAdminPassword $sqlAdminPassword `
+    -databaseName $databaseName `
+    -hostingPlanName $hostingPlanName `
+    -skuName $skuName
+   
 #
 # Add the VNET Integration
 #
 #
 
 Write-Host "Adding VNET integration."
-
-$invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
 & ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
     -rgName $rgName `

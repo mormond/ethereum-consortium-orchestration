@@ -30,6 +30,8 @@ function CheckAndAuthenticateIfRequired {
     }
 }
 
+$invocationPath = Split-Path $MyInvocation.MyCommand.Path
+
 Write-Host "Logging into Azure"
 CheckAndAuthenticateIfRequired
 
@@ -40,7 +42,7 @@ Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgName
 
 Write-host "Deploying consortium template. Wish me luck."
-New-AzureRmResourceGroupDeployment -TemplateFile "..\ethereum-consortium\template.consortium.json" `
+New-AzureRmResourceGroupDeployment -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortium.json") `
  -TemplateParameterFile ".\ethereum-consortium\template.consortium.params.json" `
  -ResourceGroupName $rgName
 
@@ -66,8 +68,6 @@ New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.c
 #
 
 Write-Host "Deploying web site / API components."
-
-$invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
 $webOutputs = & ($invocationPath + "\node-interface-components\add.app.service.components.ps1") `
     -rgName $rgName `
