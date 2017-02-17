@@ -21,6 +21,8 @@ Param(
     [string]$skuName = "S1"
 )
 
+$vnetName = "dx-founder-vnet"
+
 function CheckAndAuthenticateIfRequired {
     Try {
         $a = Get-AzureRmContext
@@ -85,5 +87,6 @@ $webOutputs = & ($invocationPath + "\node-interface-components\add.app.service.c
 Write-Host "Adding VNET integration."
 
 & ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
-    -rgName $rgName `
+    -rgName $rgMemberName `
+    -targetVnetName = $vnetName,
     -appName $webOutputs.Outputs.webApiName.Value
