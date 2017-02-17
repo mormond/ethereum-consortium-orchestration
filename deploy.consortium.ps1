@@ -72,9 +72,9 @@ $webOutputs = New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface
 #
 
 Write-Host "Adding VNET integration."
-Write-Host "Web app name: $webOutputs.WebApiName"
-Write-Host "Resource Group: $rgName"
-$argList = @($webOutputs.WebApiName, $rgName)
+
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
-& ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") $argList
+& ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
+    -rgName $rgName `
+    -appName $webOutputs.Outputs.webApiName.Value
