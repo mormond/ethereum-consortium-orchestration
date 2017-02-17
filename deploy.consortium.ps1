@@ -38,13 +38,13 @@ Write-Host "Logging into Azure"
 CheckAndAuthenticateIfRequired
 
 Write-Host "Setting subscription to: $subName"
-Select-AzureRmSubscription -SubscriptionName $subName
+#Select-AzureRmSubscription -SubscriptionName $subName
 
 Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgName
 
 Write-host "Deploying consortium template. Wish me luck."
-New-AzureRmResourceGroupDeployment -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortium.json") `
+$ethOutputs = New-AzureRmResourceGroupDeployment -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortium.json") `
  -TemplateParameterFile ".\ethereum-consortium\template.consortium.params.json" `
  -ResourceGroupName $rgName
 
@@ -57,12 +57,38 @@ New-AzureRmResourceGroupDeployment -TemplateFile ($invocationPath + "\..\ethereu
 # Run the InstallTruffle2.ps1 script
 #
 
-Write-Host "Deploying Dev VM."
-New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/dxuk/EthereumBlockchainDemo/master/DevVM/azuredeploy.json" `
+$deployment = Get-AzureRmResourceGroupDeployment -ResourceGroupName $rgName `
+ -DeploymentName "template.consortium"
+
+$consortiumName = $deployment.Parameters.consortiumName[0].Value
+$memberName = $deployment.Parameters.members.Value[0].name.Value
+$nsgName = "$consortiumName-$memberName-nsg-txnodes"
+$vnetName = "$consortiumName-$memberName-vnet"
+
+$nsg = Get-AzureRmNetworkSecurityGroup -Name $nsgName -ResourceGroupName $rgName
+
+$nsg | Add-AzureRmNetworkSecurityRuleConfig `
+ -Name RDPRule `
+ -Protocol TCP `
+ -SourcePortRange * `
+ -DestinationPortRange 3389 `
+ -SourceAddressPrefix * `
+ -DestinationAddressPrefix * `
+ -Access Allow `
+ -Direction Inbound `
+ -Priority 1001
+
+$nsg | Set-AzureRmNetworkSecurityGroup
+
+#Write-Host "Deploying Dev VM."
+#New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/dxuk/EthereumBlockchainDemo/master/DevVM/azuredeploy.json" `
+
+New-AzureRmResourceGroupDeployment -TemplateFile ".\devvm\template.devvm.json" `
  -ResourceGroupName $rgName `
  -adminUsername $devVmAdminUsername `
  -adminPassword $devVmPassword `
- -dnsLabelPrefix $devVmDnsLabelPrefix
+ -dnsLabelPrefix $devVmDnsLabelPrefix `
+ -virtualNetworkName $vnetName
 
 #
 # Add the App Service components (web site + SQL Server)
@@ -87,6 +113,6 @@ $webOutputs = & ($invocationPath + "\node-interface-components\add.app.service.c
 Write-Host "Adding VNET integration."
 
 & ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
-    -rgName $rgMemberName `
+    -rgName $rgName `
     -targetVnetName $vnetName `
     -appName $webOutputs.Outputs.webApiName.Value
