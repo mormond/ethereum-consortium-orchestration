@@ -1,17 +1,25 @@
-#Run from the etherem-consortium folder
+#
+# Script to deploy a new consortium (initial member plus dashboard / bootnode)
+#
 
-$rgConsortiumName = "BC_Founder"
-$rgName = "BC_Test_Consortium_Delete"
-$location = "westeurope"
-
-$devVmAdminUsername = "azureuser"
-$devVmDnsLabelPrefix = "bcfounder"
-$devVmPassword = Read-Host "Enter dev vm admin password" -AsSecureString
-$hostingPlanName = "AppServicesHostingPlan"
-$skuName = "S1"
-$sqlAdminLogin = "dbadmin"
-$sqlAdminPassword = Read-Host "Enter sql admin password" -AsSecureString
-$databaseName = "accounts"
+Param(
+    [Parameter(Mandatory=$True)]
+    [string]$rgName,
+    [string]$location = "WestEurope",
+    [Parameter(Mandatory=$True)]   
+    [string]$subName,
+    [string]$devVmAdminUsername = "azureuser",
+    [Parameter(Mandatory=$True)]
+    [string]$devVmDnsLabelPrefix,
+    [string]$sqlAdminLogin = "dbadmin",
+    [string]$databaseName = "accounts",
+    [Parameter(Mandatory=$True)]
+    [securestring]$devVmPassword,
+    [Parameter(Mandatory=$True)]
+    [securestring]$sqlAdminPassword,
+    [string]$hostingPlanName = "AppServicesHostingPlan",
+    [string]$skuName = "S1"
+)
 
 function CheckAndAuthenticateIfRequired {
     Try {
@@ -52,28 +60,29 @@ New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.c
  -adminPassword $devVmPassword `
  -dnsLabelPrefix $devVmDnsLabelPrefix
 
- #
- # Add the App Service components (web site + SQL Server)
- #
- #
+#
+# Add the App Service components (web site + SQL Server)
+#
+#
 
 Write-Host "Deploying web site / API components."
-$webOutputs = New-AzureRmResourceGroupDeployment -TemplateFile ".\node-interface-components\template.web.components.json" `
-  -ResourceGroupName $rgName `
-  -hostingPlanName $hostingPlanName `
-  -skuName $skuName `
-  -administratorLogin $sqlAdminLogin `
-  -administratorLoginPassword $sqlAdminPassword `
-  -databaseName $databaseName 
 
+$invocationPath = Split-Path $MyInvocation.MyCommand.Path
+
+$webOutputs = & ($invocationPath + "\node-interface-components\add.app.service.components.ps1") `
+    -rgName $rgName `
+    -sqlAdminLogin $sqlAdminLogin `
+    -sqlAdminPassword $sqlAdminPassword `
+    -databaseName $databaseName `
+    -hostingPlanName $hostingPlanName `
+    -skuName $skuName
+   
 #
 # Add the VNET Integration
 #
 #
 
 Write-Host "Adding VNET integration."
-
-$invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
 & ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
     -rgName $rgName `
