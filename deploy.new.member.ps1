@@ -9,7 +9,8 @@ Param(
     [Parameter(Mandatory=$True)]    
     [string]$dashboardIp, #IP of the consortium dashboard node (which is also the registrar node)
     [string]$location = "WestEurope",
-    [string]$subName = "FounderAscendPlus",
+    [Parameter(Mandatory=$True)]    
+    [string]$subName,
     [string]$sqlAdminLogin = "dbadmin",
     [string]$databaseName = "accounts",
     [Parameter(Mandatory=$True)]
@@ -39,7 +40,7 @@ Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgMemberName
 
 Write-host "Deploying member template. Wish me luck."
-New-AzureRmResourceGroupDeployment `
+$bcOutputs = New-AzureRmResourceGroupDeployment `
  -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortiumMember.json") `
  -TemplateParameterFile ($invocationPath + "\ethereum-consortium\template.consortium.params.participant1.json") `
  -ResourceGroupName $rgMemberName `
@@ -52,7 +53,6 @@ New-AzureRmResourceGroupDeployment `
 #
 
 Write-Host "Deploying web site / API components."
-
 $webOutputs = & ($invocationPath + "\node-interface-components\add.app.service.components.ps1") `
     -rgName $rgMemberName `
     -sqlAdminLogin $sqlAdminLogin `
@@ -69,5 +69,6 @@ $webOutputs = & ($invocationPath + "\node-interface-components\add.app.service.c
 Write-Host "Adding VNET integration."
 
 & ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
-    -rgName $rgName `
+    -rgName $rgMemberName `
+    -targetVnetName = $bcOutputs.Outputs.member.network.name.Value,
     -appName $webOutputs.Outputs.webApiName.Value
