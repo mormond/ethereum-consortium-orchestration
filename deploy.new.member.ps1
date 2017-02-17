@@ -6,7 +6,7 @@
 Param(
     [Parameter(Mandatory=$True)]
     [string]$rgMemberName, #Participant resource group name
-    [string]$memberName, #Name that will show up in dashboard
+    [Parameter(Mandatory=$True)]    
     [string]$dashboardIp, #IP of the consortium dashboard node (which is also the registrar node)
     [string]$location = "WestEurope",
     [string]$subName = "FounderAscendPlus",
@@ -36,13 +36,14 @@ Write-Host "Setting subscription to: $subName"
 Select-AzureRmSubscription -SubscriptionName $subName
 
 Write-Host "Creating new resource group: $rgName"
-New-AzureRmResourceGroup -Location $location -Name $rgName
+New-AzureRmResourceGroup -Location $location -Name $rgMemberName
 
 Write-host "Deploying member template. Wish me luck."
-New-AzureRmResourceGroupDeployment -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortiumMember.json") `
- -TemplateParameterFile .\misc\template.consortium.params.participant1.json `
+Write-Host ($invocationPath + "\..\ethereum-consortium\template.consortium.params.participant1.json") 
+New-AzureRmResourceGroupDeployment `
+ -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortiumMember.json") `
+ -TemplateParameterFile ($invocationPath + "\ethereum-consortium\template.consortium.params.participant1.json") `
  -ResourceGroupName $rgMemberName `
- -consortiumMemberName $memberName `
  -dashboardIp $dashboardIp `
  -registrarIp $dashboardIp
 
