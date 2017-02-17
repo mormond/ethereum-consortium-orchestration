@@ -39,7 +39,6 @@ Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgMemberName
 
 Write-host "Deploying member template. Wish me luck."
-Write-Host ($invocationPath + "\..\ethereum-consortium\template.consortium.params.participant1.json") 
 New-AzureRmResourceGroupDeployment `
  -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortiumMember.json") `
  -TemplateParameterFile ($invocationPath + "\ethereum-consortium\template.consortium.params.participant1.json") `
