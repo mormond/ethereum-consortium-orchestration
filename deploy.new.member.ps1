@@ -33,8 +33,8 @@ function CheckAndAuthenticateIfRequired {
 Write-Host "Logging into Azure"
 CheckAndAuthenticateIfRequired
 
-Write-Host "Setting subscription to: $subName"
-Select-AzureRmSubscription -SubscriptionName $subName
+#Write-Host "Setting subscription to: $subName"
+#Select-AzureRmSubscription -SubscriptionName $subName
 
 Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgMemberName
