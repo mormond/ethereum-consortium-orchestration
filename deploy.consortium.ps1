@@ -11,6 +11,11 @@ Param(
     [string]$devVmAdminUsername = "azureuser",
     [Parameter(Mandatory=$True)]
     [string]$devVmDnsLabelPrefix,
+    [string]$devVmVnetName = "dx-founder-vnet",
+    [string]$devVmNicName = "DevVMNic",
+    [string]$devVmSubnetName = "subnet-txnodes",
+    [string]$devVmIpAddressName = "DevVMPublicIP",
+    [string]$devVmVmName = "DevVM",
     [string]$sqlAdminLogin = "dbadmin",
     [string]$databaseName = "accounts",
     [Parameter(Mandatory=$True)]
@@ -20,8 +25,6 @@ Param(
     [string]$hostingPlanName = "AppServicesHostingPlan",
     [string]$skuName = "S1"
 )
-
-$vnetName = "dx-founder-vnet"
 
 function CheckAndAuthenticateIfRequired {
     Try {
@@ -80,15 +83,18 @@ $nsg | Add-AzureRmNetworkSecurityRuleConfig `
 
 $nsg | Set-AzureRmNetworkSecurityGroup
 
-#Write-Host "Deploying Dev VM."
-#New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/dxuk/EthereumBlockchainDemo/master/DevVM/azuredeploy.json" `
+Write-Host "Deploying Dev VM."
 
-New-AzureRmResourceGroupDeployment -TemplateFile ".\devvm\template.devvm.json" `
+New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/mormond/EthereumDevVm/add-to-existing-vnet/azuredeploy.json" `
  -ResourceGroupName $rgName `
  -adminUsername $devVmAdminUsername `
  -adminPassword $devVmPassword `
  -dnsLabelPrefix $devVmDnsLabelPrefix `
- -virtualNetworkName $vnetName
+ -virtualNetworkName $devVmVnetName `
+ -nicName $devVmNicName `
+ -subnetName $devVmSubnetName `
+ -publicIPAddressName $devVmIpAddressName `
+ -vmName $devVmVmName
 
 #
 # Add the App Service components (web site + SQL Server)
