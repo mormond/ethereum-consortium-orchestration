@@ -53,13 +53,14 @@ $bcOutputs = New-AzureRmResourceGroupDeployment `
 #
 
 Write-Host "Deploying web site / API components."
-$webOutputs = & ($invocationPath + "\node-interface-components\add.app.service.components.ps1") `
-    -rgName $rgMemberName `
-    -sqlAdminLogin $sqlAdminLogin `
-    -sqlAdminPassword $sqlAdminPassword `
-    -databaseName $databaseName `
-    -hostingPlanName $hostingPlanName `
-    -skuName $skuName
+
+$webOutputs = New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/mormond/member-appservices/master/template.web.components.json" `
+  -ResourceGroupName $rgName `
+  -hostingPlanName $hostingPlanName `
+  -skuName $skuName `
+  -administratorLogin $sqlAdminLogin `
+  -administratorLoginPassword $sqlAdminPassword `
+  -databaseName $databaseName 
    
 #
 # Add the VNET Integration
