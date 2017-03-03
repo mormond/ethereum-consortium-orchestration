@@ -1,5 +1,7 @@
 #
 # Script to deploy a new consortium (initial member plus dashboard / bootnode)
+# This script only deploys the blockchain components
+# ie not the AppService, SQL, Vnet integration
 #
 
 Param(
