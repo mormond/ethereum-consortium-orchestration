@@ -55,7 +55,8 @@ $bcOutputs = New-AzureRmResourceGroupDeployment `
 
 Write-Host "Deploying web site / API components."
 
-$webOutputs = New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/mormond/member-appservices/master/template.web.components.json" `
+$webOutputs = New-AzureRmResourceGroupDeployment `
+  -TemplateUri "https://raw.githubusercontent.com/mormond/member-appservices/master/template.web.components.json" `
   -ResourceGroupName $rgName `
   -hostingPlanName $hostingPlanName `
   -skuName $skuName `
