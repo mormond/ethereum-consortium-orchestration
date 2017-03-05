@@ -45,7 +45,7 @@
             }
         },
         "minerNodeDockerImage": {
-            "value": "ethereumex/geth-node:latest"
+            "value": "mormond/geth-node:latest"
         },
         "minerVMSku": {
             "value": "Standard_DS2_v2"
@@ -74,7 +74,7 @@
             "value": 1
         },
         "txNodeDockerImage": {
-            "value": "ethereumex/geth-node:latest"
+            "value": "mormond/geth-node:latest"
         },
         "txnodeVMSku": {
             "value": "Standard_DS1_v2"
