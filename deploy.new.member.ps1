@@ -40,12 +40,13 @@ Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgMemberName
 
 Write-host "Deploying member template. Wish me luck."
+
 $bcOutputs = New-AzureRmResourceGroupDeployment `
- -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortiumMember.json") `
- -TemplateParameterFile ($invocationPath + "\ethereum-consortium\template.consortium.params.participant1.json") `
- -ResourceGroupName $rgMemberName `
- -dashboardIp $dashboardIp `
- -registrarIp $dashboardIp
+  -TemplateFile "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortiumMember.json" `
+  -TemplateParameterFile ($invocationPath + "\ethereum-consortium-params\template.consortium.params.participant1.json") `
+  -ResourceGroupName $rgMemberName `
+  -dashboardIp $dashboardIp `
+  -registrarIp $dashboardIp
 
 #
 # Add the App Service components (web site + SQL Server)

@@ -47,9 +47,11 @@ Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgName
 
 Write-host "Deploying consortium template. Wish me luck."
-$ethOutputs = New-AzureRmResourceGroupDeployment -TemplateFile ($invocationPath + "\..\ethereum-consortium\template.consortium.json") `
- -TemplateParameterFile ".\ethereum-consortium\template.consortium.params.json" `
- -ResourceGroupName $rgName
+
+$ethOutputs = New-AzureRmResourceGroupDeployment `
+  -TemplateUri "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortium.json" `
+  -TemplateParameterFile ($invocationPath + ".\ethereum-consortium-params\template.consortium.params.json") `
+  -ResourceGroupName $rgName
 
 #
 # Add a DevBox VM
@@ -61,7 +63,7 @@ $ethOutputs = New-AzureRmResourceGroupDeployment -TemplateFile ($invocationPath 
 #
 
 $deployment = Get-AzureRmResourceGroupDeployment -ResourceGroupName $rgName `
- -DeploymentName "template.consortium"
+  -DeploymentName "template.consortium"
 
 $consortiumName = $deployment.Parameters.consortiumName[0].Value
 $memberName = $deployment.Parameters.members.Value[0].name.Value
@@ -85,16 +87,17 @@ $nsg | Set-AzureRmNetworkSecurityGroup
 
 Write-Host "Deploying Dev VM."
 
-New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/mormond/EthereumDevVm/add-to-existing-vnet/azuredeploy.json" `
- -ResourceGroupName $rgName `
- -adminUsername $devVmAdminUsername `
- -adminPassword $devVmPassword `
- -dnsLabelPrefix $devVmDnsLabelPrefix `
- -virtualNetworkName $devVmVnetName `
- -nicName $devVmNicName `
- -subnetName $devVmSubnetName `
- -publicIPAddressName $devVmIpAddressName `
- -vmName $devVmVmName
+New-AzureRmResourceGroupDeployment `
+  -TemplateUri "https://raw.githubusercontent.com/mormond/EthereumDevVm/add-to-existing-vnet/azuredeploy.json" `
+  -ResourceGroupName $rgName `
+  -adminUsername $devVmAdminUsername `
+  -adminPassword $devVmPassword `
+  -dnsLabelPrefix $devVmDnsLabelPrefix `
+  -virtualNetworkName $devVmVnetName `
+  -nicName $devVmNicName `
+  -subnetName $devVmSubnetName `
+  -publicIPAddressName $devVmIpAddressName `
+  -vmName $devVmVmName
 
 #
 # Add the App Service components (web site + SQL Server)
@@ -103,7 +106,8 @@ New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.c
 
 Write-Host "Deploying web site / API components."
 
-$webOutputs = New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/mormond/member-appservices/master/template.web.components.json" `
+$webOutputs = New-AzureRmResourceGroupDeployment `
+  -TemplateUri "https://raw.githubusercontent.com/mormond/member-appservices/master/template.web.components.json" `
   -ResourceGroupName $rgName `
   -hostingPlanName $hostingPlanName `
   -skuName $skuName `
