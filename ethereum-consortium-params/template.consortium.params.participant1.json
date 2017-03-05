@@ -1,0 +1,88 @@
+{
+    "parameters": {
+        "consortiumMemberName": {
+            "value": "p1"
+        },
+        "configOms": {
+            "value": {}
+        },
+        "contentRootOverride": {
+            "value": ""
+        },
+        "contentVersion": {
+            "value": "Release-v0.9.9"
+        },
+        "dashboardSecret": {
+            "value": "abc123"
+        },
+        "gethNetworkId": {
+            "value": "147147"
+        },
+        "locationOverride": {
+            "value": ""
+        },
+        "minerAddress": {
+            "value": "0x59085885c239A2Bc91F493e4774C3724182253C8"
+        },
+        "minerCount": {
+            "value": 3
+        },
+        "minerGenesisJson": {
+            "value": {
+                "coinbase": "0x0",
+                "difficulty": "0x20000",
+                "extraData": "0x0",
+                "gasLimit": "0x2625A0",
+                "mixhash": "0x0",
+                "nonce": "0xff00ff00ff00ff00",
+                "parentHash": "0x0",
+                "timestamp": "0x00",
+                "alloc": {
+                    "0x0000000000000000000000000000000000000000": {
+                        "balance": "1000000000000000000000000"
+                    }
+                }
+            }
+        },
+        "minerNodeDockerImage": {
+            "value": "ethereumex/geth-node:latest"
+        },
+        "minerVMSku": {
+            "value": "Standard_DS2_v2"
+        },
+        "sshPublicKey": {
+            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEApT+1OxJ/qxEK1pbeb8UE2R8XnKHPC3fGNDbSEcGNqa+ZvX71pjEPsMdxQILREt40T3Xr7Yv2ogyVDDkhlI7H9WgODoRblQVX2IZv8zA3sBEwxudYMOmj5UjThxEhs0JJoKsURs1KC1uNaC4TN8hCwWLqxqAG2AIuYJhY2dlkJlYUx0tc9Pd69ViphF5VFg5KqQPA+WQ/mEQyvKuJK3qVU4OgxYEWL0QFVhJCORns1yIu9LjLQaIY7BrlINNXfC2ZractEOkVP88XagXh215v+9vSqqHmhKJFRaWbpxaHgfJkN0phTXPeajMeQ3+OaLyni/4NqoAkwPg6hjt0UtkdGQ== rsa-key-20161128"
+        },
+        "txGenesisJson": {
+            "value": {
+                "coinbase": "0x0",
+                "difficulty": "0x20000",
+                "extraData": "0x0",
+                "gasLimit": "0x2625A0",
+                "mixhash": "0x0",
+                "nonce": "0xff00ff00ff00ff00",
+                "parentHash": "0x0",
+                "timestamp": "0x00",
+                "alloc": {
+                    "0x0000000000000000000000000000000000000000": {
+                        "balance": "1000000000000000000000000"
+                    }
+                }
+            }
+        },
+        "txnodeCount": {
+            "value": 1
+        },
+        "txNodeDockerImage": {
+            "value": "ethereumex/geth-node:latest"
+        },
+        "txnodeVMSku": {
+            "value": "Standard_DS1_v2"
+        },
+        "username": {
+            "value": "azureuser"
+        }
+    },
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0"
+}
