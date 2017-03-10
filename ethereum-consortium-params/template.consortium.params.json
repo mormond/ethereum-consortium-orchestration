@@ -1,0 +1,80 @@
+{ 
+    "parameters": {
+        "configOms": {
+            "value": {}
+        },
+        "consortiumName": {
+            "value": ""
+        },
+        "contentRootOverride": {
+            "value": ""
+        },
+        "contentVersion": {
+            "value": "Release-v0.9.9"
+        },
+        "dashboardDockerImage": {
+            "value": "ethereumex/eth-stats-dashboard:latest"
+        },
+        "dashboardSecret": {
+            "value": ""
+        },
+        "genesisJson": {
+            "value": 
+            {
+                "coinbase": "0x0",
+                "difficulty": "0x20000",
+                "extraData": "0x0",
+                "gasLimit": "0x2625A0",
+                "mixhash": "0x0",
+                "nonce": "0xff00ff00ff00ff00",
+                "parentHash": "0x0",
+                "timestamp": "0x00",
+                "alloc": {
+                    "0x0000000000000000000000000000000000000000":{
+                        "balance":"1000000000000000000000000"
+                    }
+                }
+            }
+        },
+        "gethNetworkId": {
+            "value": ""
+        },
+        "locationOverride": {
+            "value": ""
+        },
+        "members": {
+            "value": [
+                {
+                    "name":"founder",
+                    "minerCount" : 3,
+                    "txNodeCount" : 1,
+                    "minerAddress" : "0x0000000000000000000000000000000000000000",
+                    "location" : "westeurope"
+                }
+            ]
+        },
+        "minerGenesisJsonOverride": {
+            "value": {}
+        },
+        "minerNodeDockerImage": {
+            "value": "mormond/geth-node:latest"
+        },
+        "minerVMSku": {
+            "value": "Standard_DS2_v2"
+        },
+        "sshPublicKey": {
+            "value": ""
+        },
+        "txNodeDockerImage": {
+            "value": "mormond/geth-node:latest"
+        },
+        "txnodeVMSku": {
+            "value": "Standard_DS1_v2"
+        },
+        "username": {
+            "value": "azureuser"
+        }
+    },
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0"
+}

@@ -1,0 +1,9 @@
+[
+    {
+        "name":"Founder",
+        "minerCount" : 3,
+        "txNodeCount" : 1,
+        "minerAddress" : "0x0000000000000000000000000000000000000000",
+        "location" : "westeurope"
+    }
+]
