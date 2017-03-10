@@ -121,8 +121,12 @@ $webOutputs = New-AzureRmResourceGroupDeployment `
 #
 
 #Pull down the PowerShell Script to add the VNet Integration
-$temp = New-Item -Path $invocationPath -Name "temp" -ItemType "Directory"
-$vnetIntegrationScript = "$temp\app.service.vnet.integration.ps1"
+$tempPath = "$invocationPath\temp"
+If(!(Test-Path $tempPath)) { 
+    New-Item -Path $tempPath -ItemType "Directory"
+}
+
+$vnetIntegrationScript = "$tempPath\app.service.vnet.integration.ps1"
 
 Invoke-WebRequest -UseBasicParsing `
     -Uri "https://raw.githubusercontent.com/mormond/ethereum-consortium-member-services/master/app.service.vnet.integration.ps1" `
