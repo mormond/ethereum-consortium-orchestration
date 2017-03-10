@@ -43,7 +43,7 @@ Write-host "Deploying member template. Wish me luck."
 
 $bcOutputs = New-AzureRmResourceGroupDeployment `
   -TemplateFile "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortiumMember.json" `
-  -TemplateParameterFile ($invocationPath + "..\ethereum-consortium-params\template.consortium.params.participant1.json") `
+  -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.participant1.json") `
   -ResourceGroupName $rgMemberName `
   -dashboardIp $dashboardIp `
   -registrarIp $dashboardIp
@@ -72,7 +72,7 @@ $webOutputs = New-AzureRmResourceGroupDeployment `
 Write-Host $bcOutputs.Outputs.member.Value.network.name.Value
 
 #Pull down the PowerShell Script to add the VNet Integration
-$temp = New-Item -Path "." -Name "temp" -ItemType "Directory"
+$temp = New-Item -Path $invocationPath -Name "temp" -ItemType "Directory"
 $vnetIntegrationScript = "$temp\app.service.vnet.integration.ps1"
 
 Invoke-WebRequest -UseBasicParsing `
