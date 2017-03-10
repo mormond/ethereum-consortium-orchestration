@@ -107,7 +107,7 @@ New-AzureRmResourceGroupDeployment `
 Write-Host "Deploying web site / API components."
 
 $webOutputs = New-AzureRmResourceGroupDeployment `
-  -TemplateUri "https://raw.githubusercontent.com/mormond/member-appservices/master/template.web.components.json" `
+  -TemplateUri "https://raw.githubusercontent.com/mormond/ethereum-consortium-member-services/master/template.web.components.json" `
   -ResourceGroupName $rgName `
   -hostingPlanName $hostingPlanName `
   -skuName $skuName `
@@ -120,9 +120,18 @@ $webOutputs = New-AzureRmResourceGroupDeployment `
 #
 #
 
+#Pull down the PowerShell Script to add the VNet Integration
+$temp = New-Item -Path "." -Name "temp" -ItemType "Directory"
+$vnetIntegrationScript = "$temp\app.service.vnet.integration.ps1"
+
+Invoke-WebRequest -UseBasicParsing `
+    -Uri "https://raw.githubusercontent.com/mormond/ethereum-consortium-member-services/master/app.service.vnet.integration.ps1" `
+    -OutFile $vnetIntegrationScript `
+    -Verbose
+
 Write-Host "Adding VNET integration."
 
-& ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
+& ($vnetIntegrationScript) `
     -rgName $rgName `
     -targetVnetName $vnetName `
     -appName $webOutputs.Outputs.webApiName.Value

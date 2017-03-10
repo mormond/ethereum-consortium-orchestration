@@ -71,9 +71,18 @@ $webOutputs = New-AzureRmResourceGroupDeployment `
 
 Write-Host $bcOutputs.Outputs.member.Value.network.name.Value
 
+#Pull down the PowerShell Script to add the VNet Integration
+$temp = New-Item -Path "." -Name "temp" -ItemType "Directory"
+$vnetIntegrationScript = "$temp\app.service.vnet.integration.ps1"
+
+Invoke-WebRequest -UseBasicParsing `
+    -Uri "https://raw.githubusercontent.com/mormond/ethereum-consortium-member-services/master/app.service.vnet.integration.ps1" `
+    -OutFile $vnetIntegrationScript `
+    -Verbose
+
 Write-Host "Adding VNET integration."
 
-& ($invocationPath + "\node-interface-components\app.service.vnet.integration.ps1") `
+& ($vnetIntegrationScript) `
     -rgName $rgMemberName `
     -targetVnetName $bcOutputs.Outputs.member.Value.network.name.Value `
     -appName $webOutputs.Outputs.webApiName.Value
