@@ -50,7 +50,7 @@ Write-host "Deploying consortium template. Wish me luck."
 
 $ethOutputs = New-AzureRmResourceGroupDeployment `
   -TemplateUri "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortium.json" `
-  -TemplateParameterFile ($invocationPath + ".\ethereum-consortium-params\template.consortium.params.json") `
+  -TemplateParameterFile ($invocationPath + "..\ethereum-consortium-params\template.consortium.params.json") `
   -ResourceGroupName $rgName
 
 #

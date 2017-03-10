@@ -43,7 +43,7 @@ Write-host "Deploying member template. Wish me luck."
 
 $bcOutputs = New-AzureRmResourceGroupDeployment `
   -TemplateFile "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortiumMember.json" `
-  -TemplateParameterFile ($invocationPath + "\ethereum-consortium-params\template.consortium.params.participant1.json") `
+  -TemplateParameterFile ($invocationPath + "..\ethereum-consortium-params\template.consortium.params.participant1.json") `
   -ResourceGroupName $rgMemberName `
   -dashboardIp $dashboardIp `
   -registrarIp $dashboardIp
