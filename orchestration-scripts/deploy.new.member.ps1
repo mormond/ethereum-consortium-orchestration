@@ -5,7 +5,7 @@
 
 Param(
     [Parameter(Mandatory=$True)]
-    [string]$rgMemberName, #Participant resource group name
+    [string]$rgName, #Participant resource group name
     [Parameter(Mandatory=$True)]    
     [string]$dashboardIp, #IP of the consortium dashboard node (which is also the registrar node)
     [string]$location = "WestEurope",
@@ -37,14 +37,14 @@ CheckAndAuthenticateIfRequired
 #Select-AzureRmSubscription -SubscriptionName $subName
 
 Write-Host "Creating new resource group: $rgName"
-New-AzureRmResourceGroup -Location $location -Name $rgMemberName
+New-AzureRmResourceGroup -Location $location -Name $rgName
 
 Write-host "Deploying member template. Wish me luck."
 
 $bcOutputs = New-AzureRmResourceGroupDeployment `
   -TemplateFile "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortiumMember.json" `
   -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.participant1.json") `
-  -ResourceGroupName $rgMemberName `
+  -ResourceGroupName $rgName `
   -dashboardIp $dashboardIp `
   -registrarIp $dashboardIp
 
@@ -87,6 +87,6 @@ Invoke-WebRequest -UseBasicParsing `
 Write-Host "Adding VNET integration."
 
 & ($vnetIntegrationScript) `
-    -rgName $rgMemberName `
+    -rgName $rgName `
     -targetVnetName $bcOutputs.Outputs.member.Value.network.name.Value `
     -appName $webOutputs.Outputs.webApiName.Value
