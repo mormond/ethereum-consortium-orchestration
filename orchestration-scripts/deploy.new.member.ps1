@@ -72,8 +72,10 @@ $webOutputs = New-AzureRmResourceGroupDeployment `
 Write-Host $bcOutputs.Outputs.member.Value.network.name.Value
 
 #Pull down the PowerShell Script to add the VNet Integration
+$tempExists = $True
 $tempPath = "$invocationPath\temp"
 If(!(Test-Path $tempPath)) { 
+    $tempExists = $false
     New-Item -Path $tempPath -ItemType "Directory"
 }
 
@@ -90,3 +92,12 @@ Write-Host "Adding VNET integration."
     -rgName $rgName `
     -targetVnetName $bcOutputs.Outputs.member.Value.network.name.Value `
     -appName $webOutputs.Outputs.webApiName.Value
+
+Write-Host "VNET integration complete."
+
+Write-Host "Tidying up."
+Remove-Item $vnetIntegrationScript
+if (!$tempExists) {
+    Remove-Item $tempPath
+}
+Write-Host "Done."
