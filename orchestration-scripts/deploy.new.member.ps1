@@ -19,6 +19,9 @@ Param(
     [string]$skuName = "S1"
 )
 
+$contentRoot = "https://raw.githubusercontent.com/mormond"
+$ethereumArmTemplates = "ethereum-arm-templates"
+$ethereumMemberServices = "ethereum-consortium-member-services"
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
 function CheckAndAuthenticateIfRequired {
@@ -42,7 +45,7 @@ New-AzureRmResourceGroup -Location $location -Name $rgName
 Write-host "Deploying member template. Wish me luck."
 
 $bcOutputs = New-AzureRmResourceGroupDeployment `
-  -TemplateFile "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortiumMember.json" `
+  -TemplateFile "$contentRoot/$ethereumArmTemplates/master/ethereum-consortium/template.consortiumMember.json" `
   -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.participant1.json") `
   -ResourceGroupName $rgName `
   -dashboardIp $dashboardIp `
@@ -56,7 +59,7 @@ $bcOutputs = New-AzureRmResourceGroupDeployment `
 Write-Host "Deploying web site / API components."
 
 $webOutputs = New-AzureRmResourceGroupDeployment `
-  -TemplateUri "https://raw.githubusercontent.com/mormond/ethereum-consortium-member-services/master/template.web.components.json" `
+  -TemplateUri "$contentRoot/$ethereumMemberServices/master/template.web.components.json" `
   -ResourceGroupName $rgName `
   -hostingPlanName $hostingPlanName `
   -skuName $skuName `
@@ -82,7 +85,7 @@ If(!(Test-Path $tempPath)) {
 $vnetIntegrationScript = "$tempPath\app.service.vnet.integration.ps1"
 
 Invoke-WebRequest -UseBasicParsing `
-    -Uri "https://raw.githubusercontent.com/mormond/ethereum-consortium-member-services/master/app.service.vnet.integration.ps1" `
+    -Uri "$contentRoot/$ethereumMemberServices/master/app.service.vnet.integration.ps1" `
     -OutFile $vnetIntegrationScript `
     -Verbose
 

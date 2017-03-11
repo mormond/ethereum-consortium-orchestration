@@ -23,6 +23,8 @@ function CheckAndAuthenticateIfRequired {
     }
 }
 
+$contentRoot = "https://raw.githubusercontent.com/mormond"
+$ethereumArmTemplates = "ethereum-arm-templates"
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
 Write-Host "Logging into Azure"
@@ -37,7 +39,7 @@ New-AzureRmResourceGroup -Location $location -Name $rgName
 Write-host "Deploying consortium template. Wish me luck."
 
 $ethOutputs = New-AzureRmResourceGroupDeployment `
-  -TemplateUri "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortium.json" `
+  -TemplateUri "$contentRoot/$ethereumArmTemplates/master/ethereum-consortium/template.consortium.json" `
   -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.json") `
   -ResourceGroupName $rgName
 

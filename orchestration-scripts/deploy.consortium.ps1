@@ -35,6 +35,11 @@ function CheckAndAuthenticateIfRequired {
     }
 }
 
+$contentRoot = "https://raw.githubusercontent.com/mormond"
+$ethereumArmTemplates = "ethereum-arm-templates"
+$ethereumDevVm = "ethereum-dev-vm"
+$ethereumMemberServices = "ethereum-consortium-member-services"
+
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
 Write-Host "Logging into Azure"
@@ -49,7 +54,7 @@ New-AzureRmResourceGroup -Location $location -Name $rgName
 Write-host "Deploying consortium template. Wish me luck."
 
 $ethOutputs = New-AzureRmResourceGroupDeployment `
-  -TemplateUri "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/master/ethereum-consortium/template.consortium.json" `
+  -TemplateUri "$contentRoot/$ethereumArmTemplates/master/ethereum-consortium/template.consortium.json" `
   -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.json") `
   -ResourceGroupName $rgName
 
@@ -88,7 +93,7 @@ $nsg | Set-AzureRmNetworkSecurityGroup
 Write-Host "Deploying Dev VM."
 
 New-AzureRmResourceGroupDeployment `
-  -TemplateUri "https://raw.githubusercontent.com/mormond/EthereumDevVm/add-to-existing-vnet/azuredeploy.json" `
+  -TemplateUri "$contentRoot/$ethereumDevVm/add-to-existing-vnet/azuredeploy.json" `
   -ResourceGroupName $rgName `
   -adminUsername $devVmAdminUsername `
   -adminPassword $devVmPassword `
@@ -107,7 +112,7 @@ New-AzureRmResourceGroupDeployment `
 Write-Host "Deploying web site / API components."
 
 $webOutputs = New-AzureRmResourceGroupDeployment `
-  -TemplateUri "https://raw.githubusercontent.com/mormond/ethereum-consortium-member-services/master/template.web.components.json" `
+  -TemplateUri "$contentRoot/$ethereumMemberServices/master/template.web.components.json" `
   -ResourceGroupName $rgName `
   -hostingPlanName $hostingPlanName `
   -skuName $skuName `
@@ -131,7 +136,7 @@ If(!(Test-Path $tempPath)) {
 $vnetIntegrationScript = "$tempPath\app.service.vnet.integration.ps1"
 
 Invoke-WebRequest -UseBasicParsing `
-    -Uri "https://raw.githubusercontent.com/mormond/ethereum-consortium-member-services/master/app.service.vnet.integration.ps1" `
+    -Uri "$contentRoot/$ethereumMemberServices/master/app.service.vnet.integration.ps1" `
     -OutFile $vnetIntegrationScript `
     -Verbose
 
