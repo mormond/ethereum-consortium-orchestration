@@ -76,7 +76,7 @@ Write-Host $bcOutputs.Outputs.member.Value.network.name.Value
 
 #Pull down the PowerShell Script to add the VNet Integration
 $tempExists = $True
-$tempPath = "$invocationPath\temp"
+$tempPath = "$invocationPath\temp-new-member"
 If(!(Test-Path $tempPath)) { 
     $tempExists = $false
     New-Item -Path $tempPath -ItemType "Directory"
