@@ -1,26 +1,36 @@
 #
-# Script to deploy a new consortium (initial member plus dashboard / bootnode)
+# Script to deploy:
+# A new consortium (initial member plus dashboard / bootnode) - $chosenDeploymentType = "founder"
+# A minimal consortium (mainly for testing as a full deployment is lengthy) - $chosenDeploymentType = "minimal"
+# Add a new member to an existing consortium - $chosenDeploymentType = "newmember"
 #
 
 Param(
-    [Parameter(Mandatory=$True)]
+    # For All Deployments
+    [Parameter(Mandatory = $True)]
     [string]$rgName,
     [string]$location = "WestEurope",
-    [Parameter(Mandatory=$True)]   
     [string]$subName,
-    [string]$devVmAdminUsername = "azureuser",
-    [Parameter(Mandatory=$True)]
+    [string]$sqlAdminLogin = "dbadmin",
+    [string]$databaseName = "accounts",
+    [Parameter(Mandatory = $True)]   
+    [ValidateSet("Founder", "NewMember", "Minimal", IgnoreCase = $True)]
+    [string]$chosenDeploymentType,
+
+    # Only for founder deployment
     [string]$devVmDnsLabelPrefix,
+    [securestring]$devVmPassword,
+    [string]$devVmAdminUsername = "azureuser",
     [string]$devVmVnetName = "dx-founder-vnet",
     [string]$devVmNicName = "DevVMNic",
     [string]$devVmSubnetName = "subnet-txnodes",
     [string]$devVmIpAddressName = "DevVMPublicIP",
     [string]$devVmVmName = "DevVM",
-    [string]$sqlAdminLogin = "dbadmin",
-    [string]$databaseName = "accounts",
-    [Parameter(Mandatory=$True)]
-    [securestring]$devVmPassword,
-    [Parameter(Mandatory=$True)]
+    
+    # Only for newmember deployment
+    [string]$dashboardIp, # IP of the consortium dashboard node (which is also the registrar node)
+
+    # Only for founder / new member deployment
     [securestring]$sqlAdminPassword,
     [string]$hostingPlanName = "AppServicesHostingPlan",
     [string]$skuName = "S1"
@@ -35,100 +45,149 @@ function CheckAndAuthenticateIfRequired {
     }
 }
 
-$contentRoot = "https://raw.githubusercontent.com/mormond"
-$ethereumArmTemplates = "ethereum-arm-templates"
-$ethereumDevVm = "ethereum-dev-vm"
-$ethereumMemberServices = "ethereum-consortium-member-services"
+Set-Variable minimalDeployment "minimal" -Option Constant
+Set-Variable founderDeployment "founder" -Option Constant
+Set-Variable newMemberDeployment "newmember" -Option Constant
+Set-Variable contentRoot "https://raw.githubusercontent.com/mormond" -Option Constant
+Set-Variable ethereumArmTemplates "ethereum-arm-templates" -Option Constant
+Set-Variable ethereumDevVm "ethereum-dev-vm" -Option Constant
+Set-Variable ethereumMemberServices "ethereum-consortium-member-services" -Option Constant
 
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
+
+#
+# What type of deployment are we doing - check we have the required parameters
+#
+
+$chosenDeploymentType = $chosenDeploymentType.ToLowerInvariant()
+
+switch ($chosenDeploymentType) {
+    $founderDeployment {
+        if (!($devVmDnsLabelPrefix -and $devVmPassword -and $sqlAdminPassword)) {
+            Write-Host
+            Write-Host "Missing parameters..."
+            $devVmDnsLabelPrefix = Read-Host "devVmDnsLabelPrefix"
+            $devVmPassword = Read-Host "devVmPassword" -AsSecureString
+            $sqlAdminPassword = Read-Host "sqlAdminPassword" -AsSecureString
+        }
+    }
+    $newMemberDeployment {   
+        if (!($dashboardIp -and $sqlAdminPassword)) {
+            Write-Host               
+            Write-Host "Missing parameters..."
+            $dashboardIp = Read-Host "dashboardIp"
+            $sqlAdminPassword = Read-Host "sqlAdminPassword" -AsSecureString
+        }
+    }
+}
 
 Write-Host "Logging into Azure"
 CheckAndAuthenticateIfRequired
 
-#Write-Host "Setting subscription to: $subName"
-#Select-AzureRmSubscription -SubscriptionName $subName
+if ($subName) {
+    Write-Host "Setting subscription to: $subName"
+    Select-AzureRmSubscription -SubscriptionName $subName
+}
 
 Write-Host "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgName
 
-Write-host "Deploying consortium template. Wish me luck."
+Write-host "Deploying template. Wish me luck."
 
-$ethOutputs = New-AzureRmResourceGroupDeployment `
-  -TemplateUri "$contentRoot/$ethereumArmTemplates/master/ethereum-consortium/template.consortium.json" `
-  -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.json") `
-  -ResourceGroupName $rgName
+if ($chosenDeploymentType -eq $minimalDeployment -Or 
+    $chosenDeploymentType -eq $founderDeployment) {
+
+    $ethOutputs = New-AzureRmResourceGroupDeployment `
+        -TemplateUri "$contentRoot/$ethereumArmTemplates/master/ethereum-consortium/template.consortium.json" `
+        -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.json") `
+        -ResourceGroupName $rgName
+
+    $memberName = $ethOutputs.Parameters.members.Value[0].name.value
+    $consortiumName = $ethOutputs.Parameters.consortiumName.value
+
+    $vnetName = "$consortiumName-$memberName-vnet"
+    $nsgName = "$consortiumName-$memberName-nsg-txnodes"
+
+}
+else {
+    $ethOutputs = New-AzureRmResourceGroupDeployment `
+        -TemplateFile "$contentRoot/$ethereumArmTemplates/master/ethereum-consortium/template.consortiumMember.json" `
+        -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.participant1.json") `
+        -ResourceGroupName $rgName `
+        -dashboardIp $dashboardIp `
+        -registrarIp $dashboardIp
+
+    $consortiumMemberName = $ethOutputs.Parameters.consortiumMemberName.value
+    $vnetName = "$consortiumMemberName-vnet"
+}
 
 #
+# If this was a minimal deployment, we're done.
+#
+if ($chosenDeploymentType -eq $minimalDeployment) {
+    Write-Host "Done."
+    exit
+}
+
+#
+# IF this is a founder deployment
 # Add a DevBox VM
-# After the VM is deployed and running.
-# Remote desktop to the VM and open PowerShell.
-# Navigate to C:\Packages\Plugins\Microsoft.Compute.CustomScriptExtension\1.8\Downloads\0
-# Set the execution policy to allow running local unsigned script (Set-ExecutionPolicy -Scope CurrentUser RemoteSigned)
-# Run the InstallTruffle2.ps1 script
 #
+if ($chosenDeploymentType -eq $founderDeployment) {
 
-$deployment = Get-AzureRmResourceGroupDeployment -ResourceGroupName $rgName `
-  -DeploymentName "template.consortium"
+    $nsg = Get-AzureRmNetworkSecurityGroup -Name $nsgName -ResourceGroupName $rgName
 
-$consortiumName = $deployment.Parameters.consortiumName[0].Value
-$memberName = $deployment.Parameters.members.Value[0].name.Value
-$nsgName = "$consortiumName-$memberName-nsg-txnodes"
-$vnetName = "$consortiumName-$memberName-vnet"
+    $nsg | Add-AzureRmNetworkSecurityRuleConfig `
+        -Name RDPRule `
+        -Protocol TCP `
+        -SourcePortRange * `
+        -DestinationPortRange 3389 `
+        -SourceAddressPrefix * `
+        -DestinationAddressPrefix * `
+        -Access Allow `
+        -Direction Inbound `
+        -Priority 1001
 
-$nsg = Get-AzureRmNetworkSecurityGroup -Name $nsgName -ResourceGroupName $rgName
+    $nsg | Set-AzureRmNetworkSecurityGroup
 
-$nsg | Add-AzureRmNetworkSecurityRuleConfig `
- -Name RDPRule `
- -Protocol TCP `
- -SourcePortRange * `
- -DestinationPortRange 3389 `
- -SourceAddressPrefix * `
- -DestinationAddressPrefix * `
- -Access Allow `
- -Direction Inbound `
- -Priority 1001
+    Write-Host "Deploying Dev VM."
 
-$nsg | Set-AzureRmNetworkSecurityGroup
+    New-AzureRmResourceGroupDeployment `
+        -TemplateUri "$contentRoot/$ethereumDevVm/add-to-existing-vnet/azuredeploy.json" `
+        -ResourceGroupName $rgName `
+        -adminUsername $devVmAdminUsername `
+        -adminPassword $devVmPassword `
+        -dnsLabelPrefix $devVmDnsLabelPrefix `
+        -virtualNetworkName $devVmVnetName `
+        -nicName $devVmNicName `
+        -subnetName $devVmSubnetName `
+        -publicIPAddressName $devVmIpAddressName `
+        -vmName $devVmVmName
 
-Write-Host "Deploying Dev VM."
-
-New-AzureRmResourceGroupDeployment `
-  -TemplateUri "$contentRoot/$ethereumDevVm/add-to-existing-vnet/azuredeploy.json" `
-  -ResourceGroupName $rgName `
-  -adminUsername $devVmAdminUsername `
-  -adminPassword $devVmPassword `
-  -dnsLabelPrefix $devVmDnsLabelPrefix `
-  -virtualNetworkName $devVmVnetName `
-  -nicName $devVmNicName `
-  -subnetName $devVmSubnetName `
-  -publicIPAddressName $devVmIpAddressName `
-  -vmName $devVmVmName
+}
 
 #
 # Add the App Service components (web site + SQL Server)
 #
-#
-
 Write-Host "Deploying web site / API components."
 
 $webOutputs = New-AzureRmResourceGroupDeployment `
-  -TemplateUri "$contentRoot/$ethereumMemberServices/master/template.web.components.json" `
-  -ResourceGroupName $rgName `
-  -hostingPlanName $hostingPlanName `
-  -skuName $skuName `
-  -administratorLogin $sqlAdminLogin `
-  -administratorLoginPassword $sqlAdminPassword `
-  -databaseName $databaseName 
+        -TemplateUri "$contentRoot/$ethereumMemberServices/master/template.web.components.json" `
+        -ResourceGroupName $rgName `
+        -hostingPlanName $hostingPlanName `
+        -skuName $skuName `
+        -administratorLogin $sqlAdminLogin `
+        -administratorLoginPassword $sqlAdminPassword `
+        -databaseName $databaseName 
   
 #
 # Add the VNET Integration
 #
-#
 
-#Pull down the PowerShell Script to add the VNet Integration
+# Start by pulling down the PowerShell script to add the VNet Integration
 $tempExists = $True
-$tempPath = "$invocationPath\temp-consortium"
-If(!(Test-Path $tempPath)) { 
+$tempPath = "$invocationPath\temp-$vnetName"
+If (!(Test-Path $tempPath)) { 
     $tempExists = $false
     New-Item -Path $tempPath -ItemType "Directory"
 }
@@ -136,16 +195,16 @@ If(!(Test-Path $tempPath)) {
 $vnetIntegrationScript = "$tempPath\app.service.vnet.integration.ps1"
 
 Invoke-WebRequest -UseBasicParsing `
-    -Uri "$contentRoot/$ethereumMemberServices/master/app.service.vnet.integration.ps1" `
-    -OutFile $vnetIntegrationScript `
-    -Verbose
+        -Uri "$contentRoot/$ethereumMemberServices/master/app.service.vnet.integration.ps1" `
+        -OutFile $vnetIntegrationScript `
+        -Verbose
 
 Write-Host "Adding VNET integration."
 
 & ($vnetIntegrationScript) `
-    -rgName $rgName `
-    -targetVnetName $vnetName `
-    -appName $webOutputs.Outputs.webApiName.Value
+        -rgName $rgName `
+        -targetVnetName $vnetName `
+        -appName $webOutputs.Outputs.webApiName.Value
 
 Write-Host "VNET integration complete."
 
@@ -154,4 +213,5 @@ Remove-Item $vnetIntegrationScript
 if (!$tempExists) {
     Remove-Item $tempPath
 }
+
 Write-Host "Done."
