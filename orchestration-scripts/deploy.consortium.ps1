@@ -1,9 +1,61 @@
-#
-# Script to deploy:
-# A new consortium (initial member plus dashboard / bootnode) - $chosenDeploymentType = "founder"
-# A minimal consortium (mainly for testing as a full deployment is lengthy) - $chosenDeploymentType = "minimal"
-# Add a new member to an existing consortium - $chosenDeploymentType = "newmember"
-#
+<#
+.SYNOPSIS
+    Script to deploy an Ethereum consortium blockchain
+.DESCRIPTION
+    Script to deploy participants of an Ethereum consortium blockchain
+     - A new consortium (initial member plus dashboard / bootnode)
+     - A minimal consortium (mainly for testing as a full deployment is lengthy)
+     - Add a new member to an existing consortium
+.PARAMETER rgName
+    The name of a resource group to deploy to. This resource group will be created.
+.PARAMETER location
+    The Azure location in which to create the resource group.
+.PARAMETER subName
+    If provided, the subscription name to switch to before deployment.
+.PARAMETER sqlAdminLogin
+    The Sql Database Admin username
+.PARAMETER databaseName
+    The SQL Database database name
+.PARAMETER chosenDeploymentType
+    The type of deployment required:
+     - founder: The deployment of a founder node including Ethereum components with boot node, web components and Dev VM / jump box
+      - A founder deployment depends on the "template.consortium.params.json" parameters file
+     - newmember: An additional member node with Ethereum components (no boot node) and web components
+      - A newmember deployment depends on the "template.consortium.params.participant1.json" parameters file
+     - minimal: Minimal deployment of Ethereum components only, mainly for testing purposes
+      - A minimal deployment depends on the "template.consortium.params.json" parameters file
+.PARAMETER devVmDnsLabelPrefix
+    The DNS label prefix for the Dev VM / Jump Box. Must be unqiue.
+.PARAMETER devVmPassword
+    The Dev VM / Jump Box password.
+.PARAMETER devVmAdminUsername
+    The Dev VM / Jump Box admin username.
+.PARAMETER devVmVnetName
+    The vnet name to which the Dev VM / Jump Box should be joined.
+.PARAMETER devVmNicName
+    The Dev VM / Jump Box NIC name.
+.PARAMETER devVmSubnetName
+    The subnet name to which the Dev VM / Jump Box should be added.
+.PARAMETER devVmIpAddressName
+    The name to be assigned to the Dev VM / Jump Box public IP.
+.PARAMETER devVmVmName
+    The name name to be assigned to the Dev VM / Jump Box VM.
+.PARAMETER dashboardIp
+    The IP address of the consortium dashboard node (which is also the registrar node)
+.PARAMETER sqlAdminPassword
+    The admin password of the SQL Database.
+.PARAMETER hostingPlanName
+    The name of the hosting plan for the App Services deployed.
+.PARAMETER skuName
+    The SKU name for the hosting plan (must be Standard tier or above to support VNet integration)
+.EXAMPLE
+    C:\PS> deploy.consortium.ps1 -rgName "MyResourceGroup" -location "westeurope" -chosenDeploymentType "founder"
+.NOTES
+    Make sure to update the template parameters file, for example with consortium name, genesis details, member details etc
+    For details on how to do this and a walkthrough see:
+        https://github.com/mormond/ethereum-arm-templates/
+        https://github.com/mormond/ethereum-arm-templates/blob/master/ethereum-consortium/README.md
+#>
 
 Param(
     # For All Deployments
@@ -28,7 +80,7 @@ Param(
     [string]$devVmVmName = "DevVM",
     
     # Only for newmember deployment
-    [string]$dashboardIp, # IP of the consortium dashboard node (which is also the registrar node)
+    [string]$dashboardIp, 
 
     # Only for founder / new member deployment
     [securestring]$sqlAdminPassword,
