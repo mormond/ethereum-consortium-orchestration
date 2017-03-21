@@ -208,7 +208,7 @@ if ($chosenDeploymentType -eq $founderDeployment) {
     Write-Host "Deploying Dev VM."
 
     New-AzureRmResourceGroupDeployment `
-        -TemplateUri "$contentRoot/$ethereumDevVm/add-to-existing-vnet/azuredeploy.json" `
+        -TemplateUri "$contentRoot/$ethereumDevVm/master/azuredeploy_existingvnet.json" `
         -ResourceGroupName $rgName `
         -adminUsername $devVmAdminUsername `
         -adminPassword $devVmPassword `
