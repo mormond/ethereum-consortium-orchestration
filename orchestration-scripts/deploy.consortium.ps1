@@ -52,9 +52,12 @@
     C:\PS> deploy.consortium.ps1 -rgName "MyResourceGroup" -location "westeurope" -chosenDeploymentType "founder"
 .NOTES
     Make sure to update the template parameters file, for example with consortium name, genesis details, member details etc
+    
     For details on how to do this and a walkthrough see:
         https://github.com/mormond/ethereum-arm-templates/
         https://github.com/mormond/ethereum-arm-templates/blob/master/ethereum-consortium/README.md
+        
+    NOTE: The template parameters file may contain sensitive data. Be careful before committing to a repository.
 #>
 
 Param(
