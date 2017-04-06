@@ -10,10 +10,10 @@
             "value": ""
         },
         "contentVersion": {
-            "value": "Release-v0.9.9"
+            "value": "Release-v1.0.0"
         },
         "dashboardDockerImage": {
-            "value": "ethereumex/eth-stats-dashboard:latest"
+            "value": "dashboardDockerImage"
         },
         "dashboardSecret": {
             "value": ""
@@ -57,7 +57,7 @@
             "value": {}
         },
         "minerNodeDockerImage": {
-            "value": "mormond/geth-node:latest"
+            "value": "minerNodeDockerImage"
         },
         "minerVMSku": {
             "value": "Standard_DS2_v2"
@@ -66,13 +66,13 @@
             "value": ""
         },
         "txNodeDockerImage": {
-            "value": "mormond/geth-node:latest"
+            "value": "txNodeDockerImage"
         },
         "txnodeVMSku": {
             "value": "Standard_DS1_v2"
         },
         "username": {
-            "value": "azureuser"
+            "value": "username"
         }
     },
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
