@@ -6,9 +6,11 @@ For these templates to work, you will need to generate two docker images, one fo
 
 ### Dockerfiles
 A dockerfile for the txNodeDockerImage and minerNodeDockerImage can be found at:
+
 https://github.com/mormond/hackfest-images/blob/master/ethereum-node/geth/Dockerfile  
 
 A dockerfile for the dashboardDockerImage can be found at:
+
 https://github.com/mormond/hackfest-images/blob/master/eth-stats-dashboard/Dockerfile 
 
 Set the txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage via the ARM template params file.
