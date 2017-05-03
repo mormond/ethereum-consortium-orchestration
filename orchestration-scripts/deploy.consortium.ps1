@@ -75,6 +75,7 @@ Param(
     [string]$chosenDeploymentType,
     [Parameter(Mandatory = $True)]   
     [string]$contentRoot,
+    [string]$githubRepoName = "mormond",
 
     # Only for founder deployment
     [string]$devVmDnsLabelPrefix,
@@ -107,11 +108,12 @@ function CheckAndAuthenticateIfRequired {
 Set-Variable minimalDeployment "minimal" -Option Constant
 Set-Variable founderDeployment "founder" -Option Constant
 Set-Variable newMemberDeployment "newmember" -Option Constant
-Set-VAriable githubRepo "https://github.com/mormond" -Option Constant
+Set-Variable githubRepoRawUrl "https://raw.githubusercontent.com/$githubRepoName" -Option Constant
 Set-Variable ethereumDevVm "ethereum-dev-vm" -Option Constant
 Set-Variable ethereumMemberServices "ethereum-consortium-member-services" -Option Constant
 
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
+
 
 #
 # What type of deployment are we doing - check we have the required parameters
@@ -211,7 +213,7 @@ if ($chosenDeploymentType -eq $founderDeployment) {
     Write-Host "Deploying Dev VM."
 
     New-AzureRmResourceGroupDeployment `
-        -TemplateUri "$githubRepo/$ethereumDevVm/master/azuredeploy_existingvnet.json" `
+        -TemplateUri "$githubRepoRawUrl/$ethereumDevVm/master/azuredeploy_existingvnet.json" `
         -ResourceGroupName $rgName `
         -adminUsername $devVmAdminUsername `
         -adminPassword $devVmPassword `
@@ -230,7 +232,7 @@ if ($chosenDeploymentType -eq $founderDeployment) {
 Write-Host "Deploying web site / API components."
 
 $webOutputs = New-AzureRmResourceGroupDeployment `
-        -TemplateUri "$githubRepo/$ethereumMemberServices/master/template.web.components.json" `
+        -TemplateUri "$githubRepoRawUrl/$ethereumMemberServices/master/template.web.components.json" `
         -ResourceGroupName $rgName `
         -hostingPlanName $hostingPlanName `
         -skuName $skuName `
@@ -253,7 +255,7 @@ If (!(Test-Path $tempPath)) {
 $vnetIntegrationScript = "$tempPath\app.service.vnet.integration.ps1"
 
 Invoke-WebRequest -UseBasicParsing `
-        -Uri "$githubRepo/$ethereumMemberServices/master/app.service.vnet.integration.ps1" `
+        -Uri "$githubRepoRawUrl/$ethereumMemberServices/master/app.service.vnet.integration.ps1" `
         -OutFile $vnetIntegrationScript `
         -Verbose
 
