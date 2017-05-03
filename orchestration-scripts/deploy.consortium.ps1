@@ -24,6 +24,8 @@
       - A newmember deployment depends on the "template.consortium.params.participant1.json" parameters file
      - minimal: Minimal deployment of Ethereum components only, mainly for testing purposes
       - A minimal deployment depends on the "template.consortium.params.json" parameters file
+.PARAMETER contentRoot
+    The contentRootOverride URL from the template parameters
 .PARAMETER devVmDnsLabelPrefix
     The DNS label prefix for the Dev VM / Jump Box. Must be unqiue.
 .PARAMETER devVmPassword
@@ -71,6 +73,8 @@ Param(
     [Parameter(Mandatory = $True)]   
     [ValidateSet("Founder", "NewMember", "Minimal", IgnoreCase = $True)]
     [string]$chosenDeploymentType,
+    [Parameter(Mandatory = $True)]   
+    [string]$contentRoot,
 
     # Only for founder deployment
     [string]$devVmDnsLabelPrefix,
@@ -103,8 +107,7 @@ function CheckAndAuthenticateIfRequired {
 Set-Variable minimalDeployment "minimal" -Option Constant
 Set-Variable founderDeployment "founder" -Option Constant
 Set-Variable newMemberDeployment "newmember" -Option Constant
-Set-Variable contentRoot "https://raw.githubusercontent.com/mormond" -Option Constant
-Set-Variable ethereumArmTemplates "ethereum-arm-templates" -Option Constant
+Set-VAriable githubRepo "https://github.com/mormond" -Option Constant
 Set-Variable ethereumDevVm "ethereum-dev-vm" -Option Constant
 Set-Variable ethereumMemberServices "ethereum-consortium-member-services" -Option Constant
 
@@ -121,17 +124,17 @@ switch ($chosenDeploymentType) {
         if (!($devVmDnsLabelPrefix -and $devVmPassword -and $sqlAdminPassword)) {
             Write-Host
             Write-Host "Missing parameters..."
-            $devVmDnsLabelPrefix = Read-Host "devVmDnsLabelPrefix"
-            $devVmPassword = Read-Host "devVmPassword" -AsSecureString
-            $sqlAdminPassword = Read-Host "sqlAdminPassword" -AsSecureString
+            if (!$devVmDnsLabelPrefix) { $devVmDnsLabelPrefix = Read-Host "devVmDnsLabelPrefix" }
+            if (!$devVmPassword) { $devVmPassword = Read-Host "devVmPassword" -AsSecureString }
+            if (!$sqlAdminPassword) { $sqlAdminPassword = Read-Host "sqlAdminPassword" -AsSecureString }
         }
     }
     $newMemberDeployment {   
         if (!($dashboardIp -and $sqlAdminPassword)) {
             Write-Host               
             Write-Host "Missing parameters..."
-            $dashboardIp = Read-Host "dashboardIp"
-            $sqlAdminPassword = Read-Host "sqlAdminPassword" -AsSecureString
+            if (!$dashboardIp) { $dashboardIp = Read-Host "dashboardIp" }
+            if (!$sqlAdminPassword) { $sqlAdminPassword = Read-Host "sqlAdminPassword" -AsSecureString }
         }
     }
 }
@@ -153,7 +156,7 @@ if ($chosenDeploymentType -eq $minimalDeployment -Or
     $chosenDeploymentType -eq $founderDeployment) {
 
     $ethOutputs = New-AzureRmResourceGroupDeployment `
-        -TemplateUri "$contentRoot/$ethereumArmTemplates/master/ethereum-consortium/template.consortium.json" `
+        -TemplateUri "$contentRoot/template.consortium.json" `
         -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.json") `
         -ResourceGroupName $rgName
 
@@ -166,7 +169,7 @@ if ($chosenDeploymentType -eq $minimalDeployment -Or
 }
 else {
     $ethOutputs = New-AzureRmResourceGroupDeployment `
-        -TemplateFile "$contentRoot/$ethereumArmTemplates/master/ethereum-consortium/template.consortiumMember.json" `
+        -TemplateFile "$contentRoot/template.consortiumMember.json" `
         -TemplateParameterFile ("$invocationPath\..\ethereum-consortium-params\template.consortium.params.participant1.json") `
         -ResourceGroupName $rgName `
         -dashboardIp $dashboardIp `
@@ -208,7 +211,7 @@ if ($chosenDeploymentType -eq $founderDeployment) {
     Write-Host "Deploying Dev VM."
 
     New-AzureRmResourceGroupDeployment `
-        -TemplateUri "$contentRoot/$ethereumDevVm/master/azuredeploy_existingvnet.json" `
+        -TemplateUri "$githubRepo/$ethereumDevVm/master/azuredeploy_existingvnet.json" `
         -ResourceGroupName $rgName `
         -adminUsername $devVmAdminUsername `
         -adminPassword $devVmPassword `
@@ -227,7 +230,7 @@ if ($chosenDeploymentType -eq $founderDeployment) {
 Write-Host "Deploying web site / API components."
 
 $webOutputs = New-AzureRmResourceGroupDeployment `
-        -TemplateUri "$contentRoot/$ethereumMemberServices/master/template.web.components.json" `
+        -TemplateUri "$githubRepo/$ethereumMemberServices/master/template.web.components.json" `
         -ResourceGroupName $rgName `
         -hostingPlanName $hostingPlanName `
         -skuName $skuName `
@@ -250,7 +253,7 @@ If (!(Test-Path $tempPath)) {
 $vnetIntegrationScript = "$tempPath\app.service.vnet.integration.ps1"
 
 Invoke-WebRequest -UseBasicParsing `
-        -Uri "$contentRoot/$ethereumMemberServices/master/app.service.vnet.integration.ps1" `
+        -Uri "$githubRepo/$ethereumMemberServices/master/app.service.vnet.integration.ps1" `
         -OutFile $vnetIntegrationScript `
         -Verbose
 
