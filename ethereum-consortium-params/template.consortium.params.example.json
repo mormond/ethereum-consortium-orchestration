@@ -1,0 +1,80 @@
+{ 
+    "parameters": {
+        "configOms": {
+            "value": {}
+        },
+        "consortiumName": {
+            "value": "dx"
+        },
+        "contentRootOverride": {
+            "value": "https://raw.githubusercontent.com/mormond/ethereum-arm-templates/my-branch-name/ethereum-consortium"
+        },
+        "contentVersion": {
+            "value": ""
+        },
+        "dashboardDockerImage": {
+            "value": "mormond/eth-stats-dashboard:latest"
+        },
+        "dashboardSecret": {
+            "value": "dashsec"
+        },
+        "genesisJson": {
+            "value": 
+            {
+                "coinbase": "0x0",
+                "difficulty": "0x20000",
+                "extraData": "0x0",
+                "gasLimit": "0x2625A0",
+                "mixhash": "0x0",
+                "nonce": "0x1200120012001200",
+                "parentHash": "0x0",
+                "timestamp": "0x00",
+                "alloc": {
+                    "0x80a0685d6f7040e798210dd4d5e2f3986d19e1b1":{
+                        "balance":"1000000000000000000000000"
+                    }
+                }
+            }
+        },
+        "gethNetworkId": {
+            "value": "123456"
+        },
+        "locationOverride": {
+            "value": ""
+        },
+        "members": {
+            "value": [
+                {
+                    "name":"founder",
+                    "minerCount" : 3,
+                    "txNodeCount" : 1,
+                    "minerAddress" : "0x80a0685d6f7040e798210dd4d5e2f3986d19e1b1",
+                    "location" : "westeurope"
+                }
+            ]
+        },
+        "minerGenesisJsonOverride": {
+            "value": {}
+        },
+        "minerNodeDockerImage": {
+            "value": "mormond/geth-node:latest"
+        },
+        "minerVMSku": {
+            "value": "Standard_DS2_v2"
+        },
+        "sshPublicKey": {
+            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAsnd+v6Dmr6j6PnJlxHWLxPBvRvK3HjvNbtz+EFVgwTeJLtycPkddkjkzOO8MQL7hziJbE/t14fUBGkBC2EfbdKnPOlXYHOCKGMubWyhE2B4Y/xBKIFt/KCQQwMkFFBpqngWefok4sIBeUgptay+eKasZbxo8zL+7hMA6Et8Uko9lTHSz90kQxl8XnHYUID/2aY1ZOGExMAt42JCNir6Hv/nuSWbA6My3nlF58IwGmzg6MLbbOJpgpLKdETEqlchd7jDZaGDHk6MeHeKxXxvyFo8VRwdrGZdN7uAz6Vga2Q1ekzo2WkeNeQlMvDgnfD3clV5k0dwI/rhGylXkOOqexw== rsa-key-20170504"
+        },
+        "txNodeDockerImage": {
+            "value": "mormond/geth-node:latest"
+        },
+        "txnodeVMSku": {
+            "value": "Standard_DS1_v2"
+        },
+        "username": {
+            "value": "brian"
+        }
+    },
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0"
+}
