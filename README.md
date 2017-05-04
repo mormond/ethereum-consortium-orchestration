@@ -90,4 +90,4 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * .\deploy.consortium.ps1 will start a deployment and prompt for missing (script) parameter values
       * The PowerShell script automatically looks for the relevant parameters file in the ethereum-consortium-params folder
    * For example, the following would start a new founder deployment, creating a new resource group called "test123" in the west europe region
-      * __.\deploy.consortium.ps1 -rgName "170503TestEthEc10" -location westeurope -chosenDeploymentType founder__
+      * __.\deploy.consortium.ps1 -rgName "test123" -location westeurope -chosenDeploymentType founder__
