@@ -16,34 +16,34 @@ For these templates to work, you will need to generate two docker images, one fo
 1. Fork the Github repo mentioned above https://github.com/EthereumEx/ethereum-arm-templates.git 
 2. Clone the fork to your local machine
 3. We need version Release-v1.0.0
-    - __git checkout Release-v1.0.0__
-    -  __git checkout -b 'my-branch-name'__
+    * __git checkout Release-v1.0.0__
+    *  __git checkout -b 'my-branch-name'__
 4. Open the following files in your favorite text editor
-    - .\ethereum-consortium\__template.consortium.custom.json__
-    - .\ethereum-consortium\__template.consortium.json__
-    - .\ethereum-consortium\__template.consortiumMember.json__
+    * .\ethereum-consortium\__template.consortium.custom.json__
+    * .\ethereum-consortium\__template.consortium.json__
+    * .\ethereum-consortium\__template.consortiumMember.json__
 5. Make the following edits
- 1. In .\ethereum-consortium\template.consortium.custom.json
-    - Remove the following lines
-        -- 121      "defaultValue": "ethereumex/geth-node:latest",
-        -- 125      "defaultValue": "ethereumex/geth-node:latest",
- 2. In .\ethereum-consortium\template.consortium.json
-    - Remove the following lines
-        -- 124      "defaultValue": "ethereumex/geth-node:latest",
-        -- 126      "allowedValues": [
-        -- 127        "ethereumex/geth-node:latest",
-        -- 128        "ethereumex/parity-node:latest"
-        -- 129      ]
-        -- 133      "defaultValue": "ethereumex/geth-node:latest",
-        -- 135      "allowedValues": [
-        -- 136        "ethereumex/geth-node:latest"
-        -- 137      ]	  
- 3. In .\ethereum-consortium\template.consortiumMember.json
-    - Remove the following lines
-        -- 120      "defaultValue": "ethereumex/geth-node:latest",
-        -- 127      "defaultValue": "ethereumex/geth-node:latest",	  
+    1. In .\ethereum-consortium\template.consortium.custom.json
+        * Remove the following lines
+            * [121]      "defaultValue": "ethereumex/geth-node:latest",
+            * [125]      "defaultValue": "ethereumex/geth-node:latest",
+    2. In .\ethereum-consortium\template.consortium.json
+        * Remove the following lines
+            * [124]      "defaultValue": "ethereumex/geth-node:latest",
+            * [126]      "allowedValues": [
+            * [127]        "ethereumex/geth-node:latest",
+            * [128]        "ethereumex/parity-node:latest"
+            * [129]      ]
+            * [133]      "defaultValue": "ethereumex/geth-node:latest",
+            * [135]      "allowedValues": [
+            * [136]        "ethereumex/geth-node:latest"
+            * [137]      ]	  
+    3. In .\ethereum-consortium\template.consortiumMember.json
+        * Remove the following lines
+            * [120]      "defaultValue": "ethereumex/geth-node:latest",
+            * [127]      "defaultValue": "ethereumex/geth-node:latest",	  
 6. Push the local branch to your forked GitHub repo
-    - __git push origin 'my-branch-name'__ 
+    * __git push origin 'my-branch-name'__ 
 
 ### 2/ Create the required Docker images
 If you aren't familiar with Docker, a guide for building and pushing dockerfiles is available at: https://docs.docker.com/engine/getstarted/step_one/
