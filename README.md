@@ -11,7 +11,7 @@ For these templates to work, you will need to generate two docker images, one fo
 
 ## Steps to deploy using these templates
 
-### Create the modified fork of ethereum-arm-templates repo
+### 1/ Create the modified fork of ethereum-arm-templates repo
 
 1. Fork the Github repo mentioned above https://github.com/EthereumEx/ethereum-arm-templates.git 
 2. Clone the fork to your local machine
@@ -45,7 +45,7 @@ For these templates to work, you will need to generate two docker images, one fo
 6. Push the local branch to your forked GitHub repo
     - __git push origin 'my-branch-name'__ 
 
-### Create the required Docker images
+### 2/ Create the required Docker images
 If you aren't familiar with Docker, a guide for building and pushing dockerfiles is available at: https://docs.docker.com/engine/getstarted/step_one/
 #### Dockerfiles
  - A dockerfile for the txNodeDockerImage and minerNodeDockerImage can be found at: 
@@ -58,7 +58,7 @@ Build the dockerfiles above and push the images to a suitable registry (eg the D
 
 The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location will be set via the ARM template params file (see below).
 
-### Clone and customise the deployment script parameters
+### 3/ Clone and customise the deployment script parameters
 1. Clone this repo to your local machine (https://github.com/mormond/ethereum-consortium-orchestration)
 2. There are two template params files. One is for a founder deployment (ie creating a new blockchain network), the other is to add a new particpant to an existing network. Pick whichever is relevant to you. We will walk through a new deployment using __template.consortium.params.json__ but the process is very similar for both.
  - ./ethereum-consortium-params/__template.consortium.params.json__ (for a new deployment)
