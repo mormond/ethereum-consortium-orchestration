@@ -19,15 +19,15 @@ For these templates to work, you will need to generate two docker images, one fo
     - __git checkout Release-v1.0.0__
     -  __git checkout -b 'my-branch-name'__
 4. Open the following files in your favorite text editor
-    - ./ethereum-consortium/__template.consortium.custom.json__
-    - ./ethereum-consortium/__template.consortium.json__
-    - ./ethereum-consortium/__template.consortiumMember.json__
+    - .\ethereum-consortium\__template.consortium.custom.json__
+    - .\ethereum-consortium\__template.consortium.json__
+    - .\ethereum-consortium\__template.consortiumMember.json__
 5. Make the following edits
- 1. In ./ethereum-consortium/template.consortium.custom.json
+ 1. In .\ethereum-consortium\template.consortium.custom.json
     - Remove the following lines
         -- 121      "defaultValue": "ethereumex/geth-node:latest",
         -- 125      "defaultValue": "ethereumex/geth-node:latest",
- 2. In ./ethereum-consortium/template.consortium.json
+ 2. In .\ethereum-consortium\template.consortium.json
     - Remove the following lines
         -- 124      "defaultValue": "ethereumex/geth-node:latest",
         -- 126      "allowedValues": [
@@ -38,7 +38,7 @@ For these templates to work, you will need to generate two docker images, one fo
         -- 135      "allowedValues": [
         -- 136        "ethereumex/geth-node:latest"
         -- 137      ]	  
- 3. In ./ethereum-consortium/template.consortiumMember.json
+ 3. In .\ethereum-consortium\template.consortiumMember.json
     - Remove the following lines
         -- 120      "defaultValue": "ethereumex/geth-node:latest",
         -- 127      "defaultValue": "ethereumex/geth-node:latest",	  
@@ -61,8 +61,8 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
 ### 3/ Clone and customise the deployment script parameters
 1. Clone this repo to your local machine (https://github.com/mormond/ethereum-consortium-orchestration)
 2. There are two template params files. One is for a founder deployment (ie creating a new blockchain network), the other is to add a new particpant to an existing network. Pick whichever is relevant to you. We will walk through a new deployment using __template.consortium.params.json__ but the process is very similar for both.
- - ./ethereum-consortium-params/__template.consortium.params.json__ (for a new deployment)
- - ./ethereum-consortium-params/__template.consortium.params.participant1.json__ (to add a member to an existing deployment)
+ - .\ethereum-consortium-params\__template.consortium.params.json__ (for a new deployment)
+ - .\ethereum-consortium-params\__template.consortium.params.participant1.json__ (to add a member to an existing deployment)
 3. Firstly we will need to create
  - A public / private key pair (keystore file)
  - Suitable values for the genesis JSON
@@ -77,16 +77,17 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
  - contentRootOverride - https://raw.githubusercontent.com/my-repo-name/ethereum-arm-templates/my-branch-name/ethereum-consortium
  - dashboardDockerImage - URL to the location of the Docker Image created above
  - dashboardSecret
- - genesisJson
+ - genesisJson - the genesis JSON created above
  - gethNetworkId
- - members
+ - members - the members JSON created above
  - minerNodeDockerImage - URL to the location of the Docker Image created above
  - sshPublicKey
  - txNodeDockerImage
  - username
+6. An example (complete) template params file is located at __.\ethereum-consortium-params\template.consortium.params.example.json__
 6. Now we have a populated parameters file, we can kick off a deployment
  - cd to the __orchestration-scripts__ folder
- - ./deploy.consortium.ps1 will start a deployment and prompt for missing (script) parameter values
+ - .\deploy.consortium.ps1 will start a deployment and prompt for missing (script) parameter values
   -- The PowerShell script automatically looks for the relevant parameters file in the ethereum-consortium-params folder
  - For example, the following would start a new founder deployment, creating a new resource group called "test123" in the west europe region
  - __.\deploy.consortium.ps1 -rgName "170503TestEthEc10" -location westeurope -chosenDeploymentType founder__
