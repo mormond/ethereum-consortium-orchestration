@@ -23,27 +23,35 @@ For these templates to work, you will need to generate two docker images, one fo
     * __.\ethereum-consortium\template.consortium.json__
     * __.\ethereum-consortium\template.consortiumMember.json__
 5. Make the following edits
-    1. In .\ethereum-consortium\template.consortium.custom.json
-        * Remove the following lines
+
+In __.\ethereum-consortium\template.consortium.custom.json__ remove the following lines
+
 ```json
 [121]      "defaultValue": "ethereumex/geth-node:latest",
 [125]      "defaultValue": "ethereumex/geth-node:latest",
 ```
-    2. In .\ethereum-consortium\template.consortium.json
-        * Remove the following lines
-            * [124]      "defaultValue": "ethereumex/geth-node:latest",
-            * [126]      "allowedValues": [
-            * [127]        "ethereumex/geth-node:latest",
-            * [128]        "ethereumex/parity-node:latest"
-            * [129]      ]
-            * [133]      "defaultValue": "ethereumex/geth-node:latest",
-            * [135]      "allowedValues": [
-            * [136]        "ethereumex/geth-node:latest"
-            * [137]      ]	  
-    3. In .\ethereum-consortium\template.consortiumMember.json
-        * Remove the following lines
-            * [120]      "defaultValue": "ethereumex/geth-node:latest",
-            * [127]      "defaultValue": "ethereumex/geth-node:latest",	  
+
+In __.\ethereum-consortium\template.consortium.json__ remove the following lines
+
+```json
+[124]      "defaultValue": "ethereumex/geth-node:latest",
+[126]      "allowedValues": [
+[127]        "ethereumex/geth-node:latest",
+[128]        "ethereumex/parity-node:latest"
+[129]      ]
+[133]      "defaultValue": "ethereumex/geth-node:latest",
+[135]      "allowedValues": [
+[136]        "ethereumex/geth-node:latest"
+[137]      ]	  
+```
+
+In __.\ethereum-consortium\template.consortiumMember.json__ remove the following lines
+
+```json
+[120]      "defaultValue": "ethereumex/geth-node:latest",
+[127]      "defaultValue": "ethereumex/geth-node:latest",	  
+```
+
 6. Push the local branch to your forked GitHub repo
     * __git push origin 'my-branch-name'__ 
 
@@ -87,7 +95,7 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * txNodeDockerImage - URL to the location of the Docker Image created above
    * username
 6. An example (complete) template params file is located at __.\ethereum-consortium-params\template.consortium.params.example.json__
-6. Now we have a populated parameters file, we can kick off a deployment
+7. Now we have a populated parameters file, we can kick off a deployment
    * cd to the __orchestration-scripts__ folder
    * __.\deploy.consortium.ps1__ will start a deployment and prompt for missing (script) parameter values
       * The PowerShell script automatically looks for the relevant parameters file in the ethereum-consortium-params folder
