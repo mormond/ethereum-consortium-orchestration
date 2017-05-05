@@ -25,8 +25,10 @@ For these templates to work, you will need to generate two docker images, one fo
 5. Make the following edits
     1. In .\ethereum-consortium\template.consortium.custom.json
         * Remove the following lines
-            * [121]      "defaultValue": "ethereumex/geth-node:latest",
-            * [125]      "defaultValue": "ethereumex/geth-node:latest",
+```json
+[121]      "defaultValue": "ethereumex/geth-node:latest",
+[125]      "defaultValue": "ethereumex/geth-node:latest",
+```
     2. In .\ethereum-consortium\template.consortium.json
         * Remove the following lines
             * [124]      "defaultValue": "ethereumex/geth-node:latest",
