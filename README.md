@@ -28,6 +28,7 @@ In __.\ethereum-consortium\template.consortium.custom.json__ remove the followin
 
 ```json
 [121]      "defaultValue": "ethereumex/geth-node:latest",
+...
 [125]      "defaultValue": "ethereumex/geth-node:latest",
 ```
 
@@ -35,11 +36,14 @@ In __.\ethereum-consortium\template.consortium.json__ remove the following lines
 
 ```json
 [124]      "defaultValue": "ethereumex/geth-node:latest",
+...
 [126]      "allowedValues": [
 [127]        "ethereumex/geth-node:latest",
 [128]        "ethereumex/parity-node:latest"
 [129]      ]
+...
 [133]      "defaultValue": "ethereumex/geth-node:latest",
+...
 [135]      "allowedValues": [
 [136]        "ethereumex/geth-node:latest"
 [137]      ]	  
@@ -49,6 +53,7 @@ In __.\ethereum-consortium\template.consortiumMember.json__ remove the following
 
 ```json
 [120]      "defaultValue": "ethereumex/geth-node:latest",
+...
 [127]      "defaultValue": "ethereumex/geth-node:latest",	  
 ```
 
