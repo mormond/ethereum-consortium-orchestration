@@ -19,12 +19,12 @@ For these templates to work, you will need to generate two docker images, one fo
     * __git checkout Release-v1.0.0__
     * __git checkout -b 'my-branch-name'__
 4. Open the following files in your favourite text editor
-    * __.\ethereum-consortium\template.consortium.custom.json__
-    * __.\ethereum-consortium\template.consortium.json__
-    * __.\ethereum-consortium\template.consortiumMember.json__
+    * .\\ethereum-consortium\\__template.consortium.custom.json__
+    * .\\ethereum-consortium\\__template.consortium.json__
+    * .\\ethereum-consortium\\__template.consortiumMember.json__
 5. Make the following edits
 
-In __.\ethereum-consortium\template.consortium.custom.json__ remove the following lines
+In .\\ethereum-consortium\\__template.consortium.custom.json__ remove the following lines
 
 ```json
 [121]      "defaultValue": "ethereumex/geth-node:latest",
@@ -32,7 +32,7 @@ In __.\ethereum-consortium\template.consortium.custom.json__ remove the followin
 [125]      "defaultValue": "ethereumex/geth-node:latest",
 ```
 
-In __.\ethereum-consortium\template.consortium.json__ remove the following lines
+In .\\ethereum-consortium\\__template.consortium.json__ remove the following lines
 
 ```json
 [124]      "defaultValue": "ethereumex/geth-node:latest",
@@ -49,7 +49,7 @@ In __.\ethereum-consortium\template.consortium.json__ remove the following lines
 [137]      ]	  
 ```
 
-In __.\ethereum-consortium\template.consortiumMember.json__ remove the following lines
+In .\\ethereum-consortium\\__template.consortiumMember.json__ remove the following lines
 
 ```json
 [120]      "defaultValue": "ethereumex/geth-node:latest",
@@ -75,9 +75,10 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
 
 ### 3/ Clone and customise the deployment script parameters
 1. Clone this repo to your local machine (https://github.com/mormond/ethereum-consortium-orchestration)
-2. There are two template params files. One is for a founder deployment (ie creating a new blockchain network), the other is to add a new particpant to an existing network. Pick whichever is relevant to you. We will walk through a new deployment using __template.consortium.params.json__ but the process is very similar for both.
-   * .\ethereum-consortium-params\template.consortium.params.json (for a new deployment)
-   * .\ethereum-consortium-params\template.consortium.params.participant1.json (to add a member to an existing deployment)
+2. There are two template params files. One is for a founder deployment (ie creating a new blockchain network), the other is to add a new particpant to an existing network. Pick whichever is the right one for the deployment type you intend to do. 
+   * .\\ethereum-consortium-params\\__template.consortium.params.json__ (for a new deployment)
+   * .\\ethereum-consortium-params\\__template.consortium.params.participant1.json__ (to add a member to an existing deployment)
+   * We will walk through a new deployment using __template.consortium.params.json__ but the process is very similar for both.
 3. Firstly we will need to create
    * A public / private key pair (keystore file)
    * Suitable values for the genesis JSON
@@ -99,10 +100,10 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * sshPublicKey
    * txNodeDockerImage - URL to the location of the Docker Image created above
    * username
-6. An example (complete) template params file is located at __.\ethereum-consortium-params\template.consortium.params.example.json__
+6. An example (complete) template params file is located at .\\ethereum-consortium-params\\__template.consortium.params.example.json__
 7. Now we have a populated parameters file, we can kick off a deployment
    * cd to the __orchestration-scripts__ folder
-   * __.\deploy.consortium.ps1__ will start a deployment and prompt for missing (script) parameter values
+   * __.\\deploy.consortium.ps1__ will start a deployment and prompt for missing (script) parameter values
       * The PowerShell script automatically looks for the relevant parameters file in the ethereum-consortium-params folder
    * For example, the following would start a new founder deployment, creating a new resource group called "test123" in the west europe region
-      * __.\deploy.consortium.ps1 -rgName "test123" -location westeurope -chosenDeploymentType founder__
+      * __.\\deploy.consortium.ps1 -rgName "test123" -location westeurope -chosenDeploymentType founder__
