@@ -3,6 +3,9 @@ PowerShell scripts and ARM template parameter files to orchestrate the deploymen
 
 ## Dependencies
 
+### Platform
+All of the following steps were validated on a Windows 10 client OS. If you want to deploy from another platform, you will need to ensure you have all the relevant dependencies installed.
+
 ### Github Repo
 The deployment uses the templates at https://github.com/EthereumEx/ethereum-arm-templates - this repo will need to be forked for some minor changes to be made (see below). This is required because we chose not to redistribute the code in this repo.
 
@@ -63,7 +66,7 @@ In .\\ethereum-consortium\\__template.consortiumMember.json__ remove the followi
     * __git push origin 'my-branch-name'__ 
 
 ### 2/ Create the required Docker images
-For this step, you will need Docker installed. Follow this link for installation instructions: https://docs.docker.com/engine/installation/
+For this step, you will need Docker installed. As we are working with Linux containers on a Windows client, you will need to install Docker for Windows: https://docs.docker.com/docker-for-windows/install/.
 
 If you aren't familiar with Docker, a guide for building and pushing dockerfiles is available at: https://docs.docker.com/engine/getstarted/step_one/
 #### Dockerfiles
