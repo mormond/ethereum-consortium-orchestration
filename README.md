@@ -24,7 +24,9 @@ For these templates to work, you will need to generate two docker images, one fo
     * .\\ethereum-consortium\\__template.consortiumMember.json__
 5. Make the following edits
 
-In .\\ethereum-consortium\\__template.consortium.custom.json__ remove the following lines
+In .\\ethereum-consortium\\__template.consortium.custom.json__ remove the following lines and any redundant trailing commas that result 
+
+Tip: It's easier to remove lines from the bottom up so that line numbers remain consistent with the instructions
 
 ```json
 [121]      "defaultValue": "ethereumex/geth-node:latest",
@@ -32,7 +34,7 @@ In .\\ethereum-consortium\\__template.consortium.custom.json__ remove the follow
 [125]      "defaultValue": "ethereumex/geth-node:latest",
 ```
 
-In .\\ethereum-consortium\\__template.consortium.json__ remove the following lines
+In .\\ethereum-consortium\\__template.consortium.json__ remove the following lines and any redundant trailing commas that result 
 
 ```json
 [124]      "defaultValue": "ethereumex/geth-node:latest",
@@ -49,7 +51,7 @@ In .\\ethereum-consortium\\__template.consortium.json__ remove the following lin
 [137]      ]	  
 ```
 
-In .\\ethereum-consortium\\__template.consortiumMember.json__ remove the following lines
+In .\\ethereum-consortium\\__template.consortiumMember.json__ remove the following lines and any redundant trailing commas that result 
 
 ```json
 [120]      "defaultValue": "ethereumex/geth-node:latest",
