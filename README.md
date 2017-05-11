@@ -100,10 +100,10 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * dashboardDockerImage - Docker Hub image name (eg username/repository:tag)
    * dashboardSecret - a shared secret used to authenticate with the dashboard
    * genesisJson - the genesis JSON created above
-   * gethNetworkId 
+   * gethNetworkId - an integer used for uniqueness. See the Ethereum documentation for more details
    * members - update the minerAddress to match the account address in the genesisJson
    * minerNodeDockerImage - Docker Hub image name (eg username/repository:tag)
-   * sshPublicKey - use something like puttygen to generated this 
+   * sshPublicKey - use something like puttygen to generated this and save the file somewhere safe
    * txNodeDockerImage - Docker Hub image name (eg username/repository:tag)
    * username
 5. An example (complete) template params file is located at .\\ethereum-consortium-params\\__template.consortium.params.example.json__
