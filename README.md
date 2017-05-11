@@ -108,6 +108,7 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * username
 5. An example (complete) template params file is located at .\\ethereum-consortium-params\\__template.consortium.params.example.json__
 6. Now we have a populated parameters file, we can kick off a deployment
+   * Open a PowerShell command prompt
    * cd to the __orchestration-scripts__ folder
    * __.\\deploy.consortium.ps1__ will start a deployment and prompt for missing (script) parameter values
       * The PowerShell script automatically looks for the relevant parameters file in the ethereum-consortium-params folder
