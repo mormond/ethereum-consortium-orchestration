@@ -68,7 +68,7 @@ In .\\ethereum-consortium\\__template.consortiumMember.json__ remove the followi
 ### 2/ Create the required Docker images
 For this step, you will need Docker installed. As we are working with Linux containers on a Windows client, you will need to install Docker for Windows: https://docs.docker.com/docker-for-windows/install/.
 
-If you aren't familiar with Docker, a guide for building and pushing dockerfiles is available at: https://docs.docker.com/engine/getstarted/step_one/
+If you aren't familiar with Docker, a guide for building and pushing dockerfiles is available at: https://docs.docker.com/engine/getstarted/step_one/. In particular, the section on "Containers" which describes Docker files, building and pushing to a remote registry.
 #### Dockerfiles
 * A dockerfile for the txNodeDockerImage and minerNodeDockerImage can be found at: 
 https://github.com/mormond/hackfest-images/blob/master/ethereum-node/geth/Dockerfile  
