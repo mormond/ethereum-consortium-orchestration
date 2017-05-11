@@ -96,7 +96,7 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
     * Update the nonce with a valid hex value
 5. In __template.consortium.params.json__, as a minimum we need to set the following values:
    * consortiumName
-   * contentRootOverride - https://raw.githubusercontent.com/my-repo-name/ethereum-arm-templates/my-branch-name/ethereum-consortium
+   * contentRootOverride - https://raw.githubusercontent.com/[my-repo-name]/ethereum-arm-templates/[my-branch-name]/ethereum-consortium
    * dashboardDockerImage - URL to the location of the Docker Image created above
    * dashboardSecret
    * genesisJson - the genesis JSON created above
