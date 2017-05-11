@@ -40,6 +40,11 @@ Tip: It's easier to remove lines from the bottom up so that line numbers remain 
 In .\\ethereum-consortium\\__template.consortium.json__ remove the following lines and any redundant trailing commas that result 
 
 ```json
+[119]      "allowedValues": [
+[120]         "ethereumex/eth-stats-dashboard:latest"
+[121]      ]
+```
+```json
 [124]      "defaultValue": "ethereumex/geth-node:latest",
 ...
    *[126]      "allowedValues": [
