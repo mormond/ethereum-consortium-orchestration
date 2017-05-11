@@ -10,7 +10,7 @@ All of the following steps were validated on a Windows 10 client OS. If you want
 The deployment uses the templates at https://github.com/EthereumEx/ethereum-arm-templates - this repo will need to be forked for some minor changes to be made (see below). This is required because we chose not to redistribute the code in this repo.
 
 ### Docker Images
-For these templates to work, you will need to generate two docker images, one for the dashboard node and one for tx / mining nodes. Dockerfiles are available for both but you must build and push the Docker images to a repository (see below).
+For these templates to work, you will need to generate two docker images, one for the dashboard node and one for tx / mining nodes. Dockerfiles are available for both but you must build and push the Docker images to Docker Hub (see below).
 
 ## Steps to deploy using these templates
 
@@ -76,7 +76,7 @@ https://github.com/mormond/hackfest-images/blob/master/ethereum-node/geth/Docker
 https://github.com/mormond/hackfest-images/blob/master/eth-stats-dashboard/Dockerfile 
 
 #### Docker images
-Build the dockerfiles above and push the images to a suitable registry (eg the Docker public registry https://hub.docker.com/).
+Build the dockerfiles above and push the images to Docker Hub (the Docker public registry https://hub.docker.com/).
 
 The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location will be set via the ARM template params file (see below).
 
