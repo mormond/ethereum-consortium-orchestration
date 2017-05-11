@@ -101,6 +101,11 @@ function CheckAndAuthenticateIfRequired {
     }
 }
 
+function TimeLogWriteHost ([string]$outString) {
+    $time = (Get-Date -DisplayHint Time)
+    Write-Host "[$time] $outString"
+}
+
 Set-Variable minimalDeployment "minimal" -Option Constant
 Set-Variable founderDeployment "founder" -Option Constant
 Set-Variable newMemberDeployment "newmember" -Option Constant
@@ -140,18 +145,18 @@ switch ($chosenDeploymentType) {
     }
 }
 
-Write-Host "Logging into Azure"
+TimeLogWriteHost  "Logging into Azure"
 CheckAndAuthenticateIfRequired
 
 if ($subName) {
-    Write-Host "Setting subscription to: $subName"
+    TimeLogWriteHost "Setting subscription to: $subName"
     Select-AzureRmSubscription -SubscriptionName $subName
 }
 
-Write-Host "Creating new resource group: $rgName"
+TimeLogWriteHost "Creating new resource group: $rgName"
 New-AzureRmResourceGroup -Location $location -Name $rgName
 
-Write-host "Deploying template. Wish me luck."
+TimeLogWriteHost "Deploying template. Wish me luck."
 
 if ($chosenDeploymentType -eq $minimalDeployment -Or 
     $chosenDeploymentType -eq $founderDeployment) {
@@ -188,7 +193,7 @@ else {
 # If this was a minimal deployment, we're done.
 #
 if ($chosenDeploymentType -eq $minimalDeployment) {
-    Write-Host "Done."
+    TimeLogWriteHost "Done."
     exit
 }
 
@@ -213,7 +218,7 @@ if ($chosenDeploymentType -eq $founderDeployment) {
 
     $nsg | Set-AzureRmNetworkSecurityGroup
 
-    Write-Host "Deploying Dev VM."
+    TimeLogWriteHost "Deploying Dev VM."
 
     New-AzureRmResourceGroupDeployment `
         -TemplateUri "$githubRepoRawUrl/$ethereumDevVm/master/azuredeploy_existingvnet.json" `
@@ -232,7 +237,7 @@ if ($chosenDeploymentType -eq $founderDeployment) {
 #
 # Add the App Service components (web site + SQL Server)
 #
-Write-Host "Deploying web site / API components."
+TimeLogWriteHost "Deploying web site / API components."
 
 $webOutputs = New-AzureRmResourceGroupDeployment `
         -TemplateUri "$githubRepoRawUrl/$ethereumMemberServices/master/template.web.components.json" `
@@ -262,19 +267,19 @@ Invoke-WebRequest -UseBasicParsing `
         -OutFile $vnetIntegrationScript `
         -Verbose
 
-Write-Host "Adding VNET integration."
+TimeLogWriteHost "Adding VNET integration."
 
 & ($vnetIntegrationScript) `
         -rgName $rgName `
         -targetVnetName $vnetName `
         -appName $webOutputs.Outputs.webApiName.Value
 
-Write-Host "VNET integration complete."
+TimeLogWriteHost "VNET integration complete."
 
-Write-Host "Tidying up."
+TimeLogWriteHost "Tidying up."
 Remove-Item $vnetIntegrationScript
 if (!$tempExists) {
     Remove-Item $tempPath
 }
 
-Write-Host "Done."
+TimeLogWriteHost "Done."
