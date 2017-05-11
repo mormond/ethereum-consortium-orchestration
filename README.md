@@ -42,7 +42,7 @@ In .\\ethereum-consortium\\__template.consortium.json__ remove the following lin
 ```json
 [124]      "defaultValue": "ethereumex/geth-node:latest",
 ...
-[126]      "allowedValues": [
+   *[126]      "allowedValues": [
 [127]        "ethereumex/geth-node:latest",
 [128]        "ethereumex/parity-node:latest"
 [129]      ]
@@ -114,3 +114,4 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
       * The PowerShell script automatically looks for the relevant parameters file in the ethereum-consortium-params folder
    * For example, the following would start a new founder deployment, creating a new resource group called "test123" in the west europe region
       * __.\\deploy.consortium.ps1 -rgName "test123" -location westeurope -chosenDeploymentType founder__
+   * There are a number of mandatory parameter values. All the paramaters are documented in the deploy.consortium PowerShell script
