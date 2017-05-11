@@ -47,7 +47,7 @@ In .\\ethereum-consortium\\__template.consortium.json__ remove the following lin
 ```json
 [124]      "defaultValue": "ethereumex/geth-node:latest",
 ...
-   *[126]      "allowedValues": [
+[126]      "allowedValues": [
 [127]        "ethereumex/geth-node:latest",
 [128]        "ethereumex/parity-node:latest"
 [129]      ]
