@@ -27,7 +27,7 @@
 .PARAMETER contentRoot
     The contentRootOverride URL from the template parameters
 .PARAMETER devVmDnsLabelPrefix
-    The DNS label prefix for the Dev VM / Jump Box. Must be unqiue.
+    The DNS label prefix for the Dev VM / Jump Box. This will form part of a DNS name of the form prefix.location.cloudapp.azure.com and therefore must be unique for the region.
 .PARAMETER devVmPassword
     The Dev VM / Jump Box password.
 .PARAMETER devVmAdminUsername
