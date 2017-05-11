@@ -80,7 +80,7 @@ If you aren't familiar with Docker, a guide for building and pushing dockerfiles
 #### Docker images
 Clone the GitHub repo https://github.com/mormond/hackfest-images.git and build the following dockerfiles
 * __/ethereum-node/geth/Dockerfile__ (txNodeDockerImage and minerNodeDockerImage)  
-* __eth-stats-dashboard/Dockerfile__ (dashboardDockerImage)
+* __/eth-stats-dashboard/Dockerfile__ (dashboardDockerImage)
 
 Build the dockerfiles above and push the images to Docker Hub (the Docker public registry https://hub.docker.com/).
 
