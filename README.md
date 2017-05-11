@@ -86,15 +86,14 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * .\\ethereum-consortium-params\\__template.consortium.params.json__ (for a new deployment)
    * .\\ethereum-consortium-params\\__template.consortium.params.participant1.json__ (to add a member to an existing deployment)
    * We will walk through a new deployment using __template.consortium.params.json__ but the process is very similar for both.
-3. Firstly we will need to create
-   * A public / private key pair (keystore file)
-   * Suitable values for the genesis JSON
-   * Suitable values for the member JSON
-4. To generate these, follow instructions at:
-   * https://github.com/mormond/ethereum-arm-templates/tree/master/ethereum-consortium 
-   * and specifically https://github.com/mormond/ethereum-arm-templates/blob/master/ethereum-consortium/docs/setupWalkthrough.md 
-   * These walk you through creating and account using http://myetherwallet.com/ and generating the genesis JSON and member JSON content. However, rather than deploying the template now, we will capture these values in a parameter file and provide this to a deployment script.
-   * Note that the template files in this repo already have some of these values predefined as a starting point 
+3. Firstly we will need to create an account
+   * Navigate to My Ether Wallet: http://myetherwallet.com
+   * Type in a password that will be used to secure the file generated
+   * Download the Keystore file. We'll need this later.
+   * Copy the address. Note the format must be 0x0000000000000000000000000000000000000000
+4. Update the genesisJson in __template.consortium.params.json__
+    * Replace the 0x0000000000000000000000000000000000000000 in the alloc section of the json with the address that you created above.
+    * Update the nonce with a valid hex value
 5. In __template.consortium.params.json__, as a minimum we need to set the following values:
    * consortiumName
    * contentRootOverride - https://raw.githubusercontent.com/my-repo-name/ethereum-arm-templates/my-branch-name/ethereum-consortium
@@ -107,8 +106,8 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * sshPublicKey
    * txNodeDockerImage - URL to the location of the Docker Image created above
    * username
-6. An example (complete) template params file is located at .\\ethereum-consortium-params\\__template.consortium.params.example.json__
-7. Now we have a populated parameters file, we can kick off a deployment
+5. An example (complete) template params file is located at .\\ethereum-consortium-params\\__template.consortium.params.example.json__
+6. Now we have a populated parameters file, we can kick off a deployment
    * cd to the __orchestration-scripts__ folder
    * __.\\deploy.consortium.ps1__ will start a deployment and prompt for missing (script) parameter values
       * The PowerShell script automatically looks for the relevant parameters file in the ethereum-consortium-params folder
