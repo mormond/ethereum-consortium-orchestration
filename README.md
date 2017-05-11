@@ -63,6 +63,8 @@ In .\\ethereum-consortium\\__template.consortiumMember.json__ remove the followi
     * __git push origin 'my-branch-name'__ 
 
 ### 2/ Create the required Docker images
+For this step, you will need Docker installed. Follow this link for installation instructions: https://docs.docker.com/engine/installation/
+
 If you aren't familiar with Docker, a guide for building and pushing dockerfiles is available at: https://docs.docker.com/engine/getstarted/step_one/
 #### Dockerfiles
 * A dockerfile for the txNodeDockerImage and minerNodeDockerImage can be found at: 
