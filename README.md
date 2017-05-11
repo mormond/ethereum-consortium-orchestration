@@ -43,8 +43,7 @@ In .\\ethereum-consortium\\__template.consortium.json__ remove the following lin
 [119]      "allowedValues": [
 [120]         "ethereumex/eth-stats-dashboard:latest"
 [121]      ]
-```
-```json
+...
 [124]      "defaultValue": "ethereumex/geth-node:latest",
 ...
 [126]      "allowedValues": [
