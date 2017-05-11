@@ -77,13 +77,11 @@ In .\\ethereum-consortium\\__template.consortiumMember.json__ remove the followi
 For this step, you will need Docker installed. As we are working with Linux containers on a Windows client, you will need to install Docker for Windows: https://docs.docker.com/docker-for-windows/install/.
 
 If you aren't familiar with Docker, a guide for building and pushing dockerfiles is available at: https://docs.docker.com/engine/getstarted/step_one/. In particular, the section on "Containers" which describes Docker files, building and pushing to a remote registry.
-#### Dockerfiles
-* A dockerfile for the txNodeDockerImage and minerNodeDockerImage can be found at: 
-https://github.com/mormond/hackfest-images/blob/master/ethereum-node/geth/Dockerfile  
-* A dockerfile for the dashboardDockerImage can be found at:     
-https://github.com/mormond/hackfest-images/blob/master/eth-stats-dashboard/Dockerfile 
-
 #### Docker images
+Clone the GitHub repo https://github.com/mormond/hackfest-images.git and build the following dockerfiles
+* __/ethereum-node/geth/Dockerfile__ (txNodeDockerImage and minerNodeDockerImage)  
+* __eth-stats-dashboard/Dockerfile__ (dashboardDockerImage)
+
 Build the dockerfiles above and push the images to Docker Hub (the Docker public registry https://hub.docker.com/).
 
 The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location will be set via the ARM template params file (see below).
@@ -123,3 +121,9 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * For example, the following would start a new founder deployment, creating a new resource group called "test123" in the west europe region
       * __.\\deploy.consortium.ps1 -rgName "test123" -location westeurope -chosenDeploymentType founder__
    * There are a number of mandatory parameter values. All the paramaters are documented in the __deploy.consortium__ PowerShell script
+7. Once the process finally completes, login to the Azure portal to see the resources that have been created
+8. A limitation of the Azure API means that the VNET Integration feature will not work correctly until it has been reset from the portal
+   * Login to the Azure portal
+   * Find the resource group created by the deployment and select the "Virtual network gateway" resource
+   * Reset the virtual network gateway using the option under "Support and Troubleshooting"
+9. You are all set.
