@@ -87,7 +87,7 @@ Build the dockerfiles above and push the images to Docker Hub (the Docker public
 The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location will be set via the ARM template params file (see below).
 
 ### 3/ Clone and customise the deployment script parameters
-1. Clone this repo to your local machine (https://github.com/mormond/ethereum-consortium-orchestration)
+1. Clone the following repo to your local machine: https://github.com/mormond/ethereum-consortium-orchestration
 2. There are two template params files. One is for a founder deployment (ie creating a new blockchain network), the other is to add a new particpant to an existing network. Pick whichever is the right one for the deployment type you intend to do. 
    * .\\ethereum-consortium-params\\__template.consortium.params.json__ (for a new deployment)
    * .\\ethereum-consortium-params\\__template.consortium.params.participant1.json__ (to add a member to an existing deployment)
