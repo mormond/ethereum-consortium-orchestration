@@ -76,7 +76,7 @@ https://github.com/mormond/hackfest-images/blob/master/ethereum-node/geth/Docker
 https://github.com/mormond/hackfest-images/blob/master/eth-stats-dashboard/Dockerfile 
 
 #### Docker images
-Build the dockerfiles above and push the images to a suitable registry (eg the Docker public registry).
+Build the dockerfiles above and push the images to a suitable registry (eg the Docker public registry https://hub.docker.com/).
 
 The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location will be set via the ARM template params file (see below).
 
