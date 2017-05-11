@@ -4,7 +4,7 @@ PowerShell scripts and ARM template parameter files to orchestrate the deploymen
 ## Dependencies
 
 ### Github Repo
-The deployment uses the templates at https://github.com/EthereumEx/ethereum-arm-templates - this repo will need to be forked for some minor changes to be made (see below).
+The deployment uses the templates at https://github.com/EthereumEx/ethereum-arm-templates - this repo will need to be forked for some minor changes to be made (see below). This is required because we chose not to redistribute the code in this repo.
 
 ### Docker Images
 For these templates to work, you will need to generate two docker images, one for the dashboard node and one for tx / mining nodes. Dockerfiles are available for both but you must build and push the Docker images to a repository (see below).
