@@ -24,8 +24,6 @@
       - A newmember deployment depends on the "template.consortium.params.participant1.json" parameters file
      - minimal: Minimal deployment of Ethereum components only, mainly for testing purposes
       - A minimal deployment depends on the "template.consortium.params.json" parameters file
-.PARAMETER contentRoot
-    The contentRootOverride URL from the template parameters
 .PARAMETER devVmDnsLabelPrefix
     The DNS label prefix for the Dev VM / Jump Box. This will form part of a DNS name of the form prefix.location.cloudapp.azure.com and therefore must be unique for the region.
 .PARAMETER devVmPassword
@@ -73,15 +71,13 @@ Param(
     [Parameter(Mandatory = $True)]   
     [ValidateSet("Founder", "NewMember", "Minimal", IgnoreCase = $True)]
     [string]$chosenDeploymentType,
-    [Parameter(Mandatory = $True)]   
-    [string]$contentRoot,
     [string]$githubRepoName = "mormond",
 
     # Only for founder deployment
     [string]$devVmDnsLabelPrefix,
     [securestring]$devVmPassword,
     [string]$devVmAdminUsername = "azureuser",
-    [string]$devVmVnetName = "dx-founder-vnet",
+    [string]$devVmVnetName,
     [string]$devVmNicName = "DevVMNic",
     [string]$devVmSubnetName = "subnet-txnodes",
     [string]$devVmIpAddressName = "DevVMPublicIP",
@@ -114,6 +110,9 @@ Set-Variable ethereumMemberServices "ethereum-consortium-member-services" -Optio
 
 $invocationPath = Split-Path $MyInvocation.MyCommand.Path
 
+$jsonTemplateParams = (Get-Content "$invocationPath\..\ethereum-consortium-params\template.consortium.params.json" | Out-String)
+$json = ConvertFrom-Json $jsonTemplateParams
+$contentRoot = $json.parameters.contentRootOverride.value
 
 #
 # What type of deployment are we doing - check we have the required parameters
@@ -167,6 +166,10 @@ if ($chosenDeploymentType -eq $minimalDeployment -Or
 
     $vnetName = "$consortiumName-$memberName-vnet"
     $nsgName = "$consortiumName-$memberName-nsg-txnodes"
+
+    if (!$devVmVnetName) {
+        $devVmVnetName = $vnetName
+    }
 
 }
 else {
