@@ -95,16 +95,16 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
     * Replace the 0x0000000000000000000000000000000000000000 in the alloc section of the json with the address that you created above.
     * Update the nonce with a valid hex value
 5. In __template.consortium.params.json__, as a minimum we need to set the following values:
-   * consortiumName
+   * consortiumName - a short string to identify resources in the consortium
    * contentRootOverride - https://raw.githubusercontent.com/[my-repo-name]/ethereum-arm-templates/[my-branch-name]/ethereum-consortium
-   * dashboardDockerImage - URL to the location of the Docker Image created above
-   * dashboardSecret
+   * dashboardDockerImage - Docker Hub image name (eg username/repository:tag)
+   * dashboardSecret - a shared secret used to authenticate with the dashboard
    * genesisJson - the genesis JSON created above
-   * gethNetworkId
-   * members - the members JSON created above
-   * minerNodeDockerImage - URL to the location of the Docker Image created above
-   * sshPublicKey
-   * txNodeDockerImage - URL to the location of the Docker Image created above
+   * gethNetworkId 
+   * members - update the minerAddress to match the account address in the genesisJson
+   * minerNodeDockerImage - Docker Hub image name (eg username/repository:tag)
+   * sshPublicKey - use something like puttygen to generated this 
+   * txNodeDockerImage - Docker Hub image name (eg username/repository:tag)
    * username
 5. An example (complete) template params file is located at .\\ethereum-consortium-params\\__template.consortium.params.example.json__
 6. Now we have a populated parameters file, we can kick off a deployment
