@@ -63,7 +63,11 @@ In .\\ethereum-consortium\\__template.consortiumMember.json__ remove the followi
 ```
 
 6. Push the local branch to your forked GitHub repo
-    * __git push origin 'my-branch-name'__ 
+   * Commit your local changes
+      * __git add \*__
+      * __git commit -m 'Updating templates'__
+   * Push your changes to the GitHub repo
+   * __git push origin my-branch-name__ 
 
 ### 2/ Create the required Docker images
 For this step, you will need Docker installed. As we are working with Linux containers on a Windows client, you will need to install Docker for Windows: https://docs.docker.com/docker-for-windows/install/.
