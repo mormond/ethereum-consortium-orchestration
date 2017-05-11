@@ -90,7 +90,7 @@ The txNodeDockerImage / minerNodeDockerImage / dashboardDockerImage location wil
    * Navigate to My Ether Wallet: http://myetherwallet.com
    * Type in a password that will be used to secure the file generated
    * Download the Keystore file. We'll need this later.
-   * Copy the address. Note the format must be 0x0000000000000000000000000000000000000000
+   * Copy the address. Make sure the address is prefixed with '0x' (eg 0x0000000000000000000000000000000000000000)
 4. Update the genesisJson in __template.consortium.params.json__
     * Replace the 0x0000000000000000000000000000000000000000 in the alloc section of the json with the address that you created above.
     * Update the nonce with a valid hex value
